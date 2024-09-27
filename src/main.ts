@@ -1,12 +1,19 @@
 import "@logseq/libs";
 import proxyLogseq from "logseq-proxy";
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 
 import App from './App.vue'
+import useMindStore from "./stores/mind";
 
 const app = createApp(App)
+const pinia = createPinia()
+app.use(pinia)
 
 let isMounted = false;
+
+const mindStore = useMindStore();
+const { setPage, setTrees } = mindStore
 
 if (import.meta.env.VITE_MODE === "web") {
   // run in browser
@@ -45,7 +52,15 @@ if (import.meta.env.VITE_MODE === "web") {
 }
 
 function renderApp() {
+  setData();
   if (isMounted) return;
   app.mount("#root");
   isMounted = true;
+}
+
+async function setData() {
+  const page = await logseq.Editor.getCurrentPage();
+  const tree = page?.uuid ? await logseq.Editor.getPageBlocksTree(page.uuid) : [];
+  setPage(page);
+  setTrees(tree);
 }
