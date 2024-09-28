@@ -13,7 +13,7 @@ app.use(pinia)
 let isMounted = false;
 
 const mindStore = useMindStore();
-const { setPage, setTrees } = mindStore
+const { setPage, setTrees, setCurrentGraph } = mindStore
 
 if (import.meta.env.VITE_MODE === "web") {
   // run in browser
@@ -56,11 +56,21 @@ function renderApp() {
   if (isMounted) return;
   app.mount("#root");
   isMounted = true;
+  renderMindMap();
+}
+
+async function renderMindMap() {
+  const page = await logseq.Editor.getCurrentPage();
+  const tree = page?.uuid ? await logseq.Editor.getPageBlocksTree(page.uuid) : [];
+  setPage(page);
+  setTrees(tree);
 }
 
 async function setData() {
   const page = await logseq.Editor.getCurrentPage();
   const tree = page?.uuid ? await logseq.Editor.getPageBlocksTree(page.uuid) : [];
+  const currentGraph = await logseq.App.getCurrentGraph();
   setPage(page);
   setTrees(tree);
+  setCurrentGraph(currentGraph);
 }
