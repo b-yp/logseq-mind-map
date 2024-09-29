@@ -39,7 +39,19 @@ watch([mindMap, getPage, getTrees, getCurrentGraph], () => {
     },
     children: getData(trees, currentGraph),
   });
+
+  setTimeout(mindMap.value.view.fit, 500);
 });
+
+watch(
+  () => mindMap.value,
+  () => {
+    if (!mindMap.value) return;
+    mindMap.value.on("node_tree_render_end", () => {
+      mindMap.value?.view.fit(() => {}, false, 20);
+    });
+  }
+);
 
 const close = () => {
   logseq.hideMainUI();
@@ -59,9 +71,6 @@ const close = () => {
 #main {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .close-btn {
@@ -72,7 +81,8 @@ const close = () => {
 }
 
 #mindMapContainer {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 </style>
