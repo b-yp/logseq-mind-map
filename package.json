@@ -17,7 +17,8 @@
     "hotkeys-js": "^3.13.7",
     "pinia": "^2.2.2",
     "simple-mind-map": "^0.11.2",
-    "vue": "^3.5.8"
+    "vue": "^3.5.8",
+    "vue-i18n": "^9.14.1"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -27,9 +28,12 @@
     "@types/node": "^22.7.2",
     "@vitejs/plugin-vue": "^5.1.4",
     "autoprefixer": "^10.4.20",
+    "daisyui": "^4.12.10",
     "eslint": "^9.11.1",
     "logseq-proxy": "^0.1.2",
+    "postcss": "^8.4.47",
     "semantic-release": "^24.1.1",
+    "tailwindcss": "^3.4.13",
     "typescript": "^5.6.2",
     "vite": "^5.4.8",
     "vite-plugin-importer": "^0.2.5"

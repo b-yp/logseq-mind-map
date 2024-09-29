@@ -2,18 +2,29 @@ import "@logseq/libs";
 import proxyLogseq from "logseq-proxy";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import { createI18n } from "vue-i18n";
 
-import App from './App.vue'
+import App from "./App.vue";
 import useMindStore from "./stores/mind";
+import messages from "./lang/index";
+import "./css/tailwind.css";
 
-const app = createApp(App)
-const pinia = createPinia()
-app.use(pinia)
+const i18n = createI18n({
+  legacy: false,
+  locale: "zhCn",
+  fallbackLocale: "enUs",
+  messages,
+});
+
+const app = createApp(App);
+const pinia = createPinia();
+app.use(pinia);
+app.use(i18n);
 
 let isMounted = false;
 
 const mindStore = useMindStore();
-const { setPage, setTrees, setCurrentGraph } = mindStore
+const { setPage, setTrees, setCurrentGraph } = mindStore;
 
 if (import.meta.env.VITE_MODE === "web") {
   // run in browser
@@ -61,14 +72,18 @@ function renderApp() {
 
 async function renderMindMap() {
   const page = await logseq.Editor.getCurrentPage();
-  const tree = page?.uuid ? await logseq.Editor.getPageBlocksTree(page.uuid) : [];
+  const tree = page?.uuid
+    ? await logseq.Editor.getPageBlocksTree(page.uuid)
+    : [];
   setPage(page);
   setTrees(tree);
 }
 
 async function setData() {
   const page = await logseq.Editor.getCurrentPage();
-  const tree = page?.uuid ? await logseq.Editor.getPageBlocksTree(page.uuid) : [];
+  const tree = page?.uuid
+    ? await logseq.Editor.getPageBlocksTree(page.uuid)
+    : [];
   const currentGraph = await logseq.App.getCurrentGraph();
   setPage(page);
   setTrees(tree);

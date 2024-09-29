@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from "vue";
+import hotkeys from "hotkeys-js";
+import { useI18n } from "vue-i18n";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
-import hotkeys from "hotkeys-js";
+import { themeList } from "simple-mind-map/src/constants/constant";
 
 import useMindStore from "./stores/mind";
 import { getData } from "./utils";
+
+const { t } = useI18n();
 
 MindMap.usePlugin(NodeImgAdjust);
 
@@ -26,6 +30,8 @@ onMounted(() => {
   hotkeys("esc", () => {
     close();
   });
+
+  console.log("theme.title", t("theme.title"));
 });
 
 watch([mindMap, getPage, getTrees, getCurrentGraph], () => {
@@ -60,7 +66,6 @@ const close = () => {
 
 <template>
   <div id="main">
-    <button class="close-btn" @click="close">Close</button>
     <div id="mindMapContainer"></div>
   </div>
 </template>
