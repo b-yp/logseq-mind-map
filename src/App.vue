@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from "vue";
 import MindMap from "simple-mind-map";
-import NodeImgAdjust from 'simple-mind-map/src/plugins/NodeImgAdjust.js'
+import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
+import hotkeys from "hotkeys-js";
 
 import useMindStore from "./stores/mind";
 import { getData } from "./utils";
@@ -21,15 +22,22 @@ onMounted(() => {
     } as any);
     mindMap.value = mind;
   }, 100);
+
+  hotkeys("esc", () => {
+    close();
+  });
 });
 
 watch([mindMap, getPage, getTrees, getCurrentGraph], () => {
-  if (!mindMap.value) return;
+  const currentGraph = getCurrentGraph();
+  const trees = getTrees();
+  const page = getPage();
+  if (!mindMap.value || !currentGraph) return;
   mindMap.value.updateData({
     data: {
-      text: getPage()?.name,
+      text: page?.name,
     },
-    children: getData(getTrees(), getCurrentGraph()),
+    children: getData(trees, currentGraph),
   });
 });
 

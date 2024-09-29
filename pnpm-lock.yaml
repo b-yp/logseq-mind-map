@@ -11,6 +11,9 @@ importers:
       '@logseq/libs':
         specifier: ^0.0.17
         version: 0.0.17
+      hotkeys-js:
+        specifier: ^3.13.7
+        version: 3.13.7
       pinia:
         specifier: ^2.2.2
         version: 2.2.2(typescript@5.6.2)(vue@3.5.8(typescript@5.6.2))
@@ -1240,6 +1243,9 @@ packages:
   hosted-git-info@8.0.0:
     resolution: {integrity: sha512-4nw3vOVR+vHUOT8+U4giwe2tcGv+R3pwwRidUe67DoMBTjhrfr6rZYJVVwdkBE+Um050SG+X9tf0Jo4fOpn01w==}
     engines: {node: ^18.17.0 || >=20.5.0}
+
+  hotkeys-js@3.13.7:
+    resolution: {integrity: sha512-ygFIdTqqwG4fFP7kkiYlvayZppeIQX2aPpirsngkv1xM1lP0piDY5QEh68nQnIKvz64hfocxhBaD/uK3sSK1yQ==}
 
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
@@ -3694,6 +3700,8 @@ snapshots:
   hosted-git-info@8.0.0:
     dependencies:
       lru-cache: 10.4.3
+
+  hotkeys-js@3.13.7: {}
 
   http-proxy-agent@7.0.2:
     dependencies:
