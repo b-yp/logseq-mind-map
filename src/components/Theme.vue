@@ -53,6 +53,10 @@
               v-for="item in currentList"
               :key="item.value"
               class="flex flex-col items-center gap-2 pb-2 mb-4 cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:shadow-xl hover:border-gray-300"
+              :class="{
+                'border-indigo-600': getTheme() === item.value,
+                'hover:border-indigo-600': getTheme() === item.value,
+              }"
               @click="useTheme(item)"
             >
               <img class="h-auto" :src="themeMap[item.value]" alt="" />
@@ -77,8 +81,8 @@ const { t } = useI18n();
 
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
-const { getMindMap } = mindMapStore;
-const { getIsThemeDrawerOpen, setIsThemeDrawerOpen } = commonStore;
+const { getMindMap, getTheme, setTheme } = mindMapStore;
+const { getIsThemeDrawerOpen, setIsThemeDrawerOpen, setIsDarkUI } = commonStore;
 
 interface Theme {
   name: string;
@@ -89,7 +93,6 @@ interface Theme {
 const themeList = ref<Theme[]>(themeListData);
 const groupList = ref<{ name: string; list: Theme[] }[]>([]);
 const activeName = ref("");
-const theme = ref("");
 
 const currentList = computed(() => {
   return (
@@ -103,7 +106,13 @@ onMounted(() => {
 
 watch(getMindMap, () => {
   const mindMap = getMindMap();
-  theme.value = mindMap?.getTheme() || "";
+  setTheme(mindMap?.getTheme() || "");
+});
+
+watch(getTheme, () => {
+  const mindMap = getMindMap();
+  if (!mindMap) return;
+  mindMap.setTheme(getTheme());
 });
 
 const initGroup = () => {
@@ -140,10 +149,13 @@ const handleTabClick = (groupName: string) => {
 };
 
 const useTheme = (currentTheme: Theme) => {
-  if (currentTheme.value === theme.value) return;
-  theme.value = currentTheme.value;
-  const mindMap = getMindMap();
-  if (!mindMap) return;
-  mindMap.setTheme(currentTheme.value);
+  const theme = getTheme();
+  if (currentTheme.value === theme) return;
+  setTheme(currentTheme.value);
+  setDark(currentTheme.dark)
+};
+
+const setDark = (isDark: boolean) => {
+  setIsDarkUI(isDark);
 };
 </script>

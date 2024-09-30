@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 
-import { useLogseqStore, useMindMapStore } from "@/stores";
+import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData } from "@/utils";
 import ToolBar from "@/components/ToolBar.vue";
 import Theme from "@/components/Theme.vue";
@@ -16,10 +16,10 @@ MindMap.usePlugin(NodeImgAdjust);
 
 const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
+const commonStore = useCommonStore();
 const { getPage, getTrees, getCurrentGraph } = logseqStore;
-const { getMindMap, setMindMap } = mindMapStore;
-
-const theme = ref<"light" | "dark">("light");
+const { getMindMap, setMindMap, getTheme, setTheme } = mindMapStore;
+const { getIsDarkUI, setIsDarkUI } = commonStore;
 
 onMounted(() => {
   setTimeout(() => {
@@ -53,32 +53,36 @@ watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
   setTimeout(mindMap.view.fit, 500);
 });
 
-watch(
-  getMindMap,
-  () => {
-    const mindMap = getMindMap();
-    if (!mindMap) return;
-    mindMap.on("node_tree_render_end", () => {
-      mindMap.view.fit(() => {}, false, 20);
-    });
-  }
-);
+watch(getMindMap, () => {
+  const mindMap = getMindMap();
+  if (!mindMap) return;
+  mindMap.on("node_tree_render_end", () => {
+    mindMap.view.fit(() => {}, false, 20);
+  });
+});
 
 const close = () => {
   logseq.hideMainUI();
 };
 
 const toggleTheme = () => {
-  theme.value = theme.value === "light" ? "dark" : "light";
+  const isDarkUI = getIsDarkUI();
+  if (isDarkUI) {
+    setIsDarkUI(false);
+    setTheme("default");
+  } else {
+    setIsDarkUI(true);
+    setTheme("dark");
+  }
 };
 </script>
 
 <template>
-  <div id="main" :data-theme="theme">
+  <div id="main" :data-theme="getIsDarkUI() ? 'dark' : 'light'">
     <div id="mindMapContainer"></div>
     <div class="theme-toggle fixed top-5 right-5 flex items-center gap-2">
       <span>🌞</span>
-      <input class="toggle" type="checkbox" @change="toggleTheme" />
+      <input class="toggle" type="checkbox" :checked="getIsDarkUI()" @change="toggleTheme" />
       <span>🌚</span>
     </div>
     <ToolBar />
