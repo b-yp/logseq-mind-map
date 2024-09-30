@@ -1,7 +1,7 @@
 <template>
   <div
     class="z-50 fixed right-5 top-1/2 transform -translate-y-1/2"
-    :class="{ 'right-[20vw]': getIsThemeDrawerOpen() }"
+    :class="{ 'right-[21vw]': getIsThemeDrawerOpen() }"
   >
     <ul class="menu menu-sm bg-base-200 rounded-box">
       <li
@@ -12,7 +12,7 @@
       >
         <div class="flex flex-col items-center gap-2">
           <Icon :name="item.icon" />
-          <span>{{ item.title }}</span>
+          <span>{{ $t(item.title) }}</span>
         </div>
       </li>
     </ul>
@@ -32,7 +32,7 @@ const { getIsThemeDrawerOpen, setIsThemeDrawerOpen } = commonStore;
 const toolBarData = ref([
   {
     icon: "theme",
-    title: "主题",
+    title: "theme.title",
     onclick: () => {
       setIsThemeDrawerOpen(true);
     },

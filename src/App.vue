@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, watch } from "vue";
 import hotkeys from "hotkeys-js";
-import { useI18n } from "vue-i18n";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData } from "@/utils";
+import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import Theme from "@/components/Theme.vue";
-
-const { t } = useI18n();
 
 MindMap.usePlugin(NodeImgAdjust);
 
@@ -18,8 +16,8 @@ const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 const { getPage, getTrees, getCurrentGraph } = logseqStore;
-const { getMindMap, setMindMap, getTheme, setTheme } = mindMapStore;
-const { getIsDarkUI, setIsDarkUI } = commonStore;
+const { getMindMap, setMindMap } = mindMapStore;
+const { getIsDarkUI } = commonStore;
 
 onMounted(() => {
   setTimeout(() => {
@@ -33,8 +31,6 @@ onMounted(() => {
   hotkeys("esc", () => {
     close();
   });
-
-  console.log("theme.title", t("theme.title"));
 });
 
 watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
@@ -64,27 +60,12 @@ watch(getMindMap, () => {
 const close = () => {
   logseq.hideMainUI();
 };
-
-const toggleTheme = () => {
-  const isDarkUI = getIsDarkUI();
-  if (isDarkUI) {
-    setIsDarkUI(false);
-    setTheme("default");
-  } else {
-    setIsDarkUI(true);
-    setTheme("dark");
-  }
-};
 </script>
 
 <template>
   <div id="main" :data-theme="getIsDarkUI() ? 'dark' : 'light'">
     <div id="mindMapContainer"></div>
-    <div class="theme-toggle fixed top-5 right-5 flex items-center gap-2">
-      <span>🌞</span>
-      <input class="toggle" type="checkbox" :checked="getIsDarkUI()" @change="toggleTheme" />
-      <span>🌚</span>
-    </div>
+    <SettingMenu />
     <ToolBar />
     <Theme />
   </div>

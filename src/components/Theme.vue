@@ -45,7 +45,7 @@
               class="tab"
               :class="{ 'tab-active': activeName === item.name }"
               @click="handleTabClick(item.name)"
-              >{{ item.name }}</a
+              >{{ $t(item.name) }}</a
             >
           </div>
           <div class="flex-1 overflow-y-auto mt-2">
@@ -71,13 +71,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
 import { themeList as themeListData } from "simple-mind-map/src/constants/constant";
 
 import { themeMap, baiduThemes } from "@/config/theme";
 import { useMindMapStore, useCommonStore } from "@/stores";
-
-const { t } = useI18n();
 
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
@@ -127,17 +124,17 @@ const initGroup = () => {
   });
   groupList.value = [
     {
-      name: t("theme.classics"),
+      name: "theme.classics",
       list: classicsList,
     },
     {
-      name: t("theme.dark"),
+      name: "theme.dark",
       list: themeList.value.filter((item) => {
         return item.dark;
       }),
     },
     {
-      name: t("theme.simple"),
+      name: "theme.simple",
       list: baiduList,
     },
   ];

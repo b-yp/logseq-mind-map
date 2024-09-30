@@ -1,0 +1,55 @@
+<template>
+  <div class="fixed top-5 right-5 flex gap-4">
+    <div class="lang-toggle">
+      <select
+        class="select select-info select-xs max-w-xs"
+        @change="changeLang"
+      >
+        <option disabled selected>Select language</option>
+        <option v-for="lang in langs" :key="lang" :selected="lang === locale">{{ lang }}</option>
+      </select>
+    </div>
+    <div class="theme-toggle flex items-center gap-2">
+      <span>🌞</span>
+      <input
+        class="toggle"
+        type="checkbox"
+        :checked="getIsDarkUI()"
+        @change="toggleTheme"
+      />
+      <span>🌚</span>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+import { useCommonStore, useMindMapStore } from "@/stores";
+import lang from "@/lang";
+
+const { locale } = useI18n();
+
+const mindMapStore = useMindMapStore();
+const commonStore = useCommonStore();
+const { setTheme } = mindMapStore;
+const { getIsDarkUI, setIsDarkUI } = commonStore;
+
+const langs = Object.keys(lang);
+
+const toggleTheme = () => {
+  const isDarkUI = getIsDarkUI();
+  if (isDarkUI) {
+    setIsDarkUI(false);
+    setTheme("default");
+  } else {
+    setIsDarkUI(true);
+    setTheme("dark");
+  }
+};
+
+const changeLang = (e: Event) => {
+  const lang = (e.target as HTMLSelectElement).value;
+  locale.value = lang;
+  localStorage.setItem("localeValue", locale.value);
+};
+</script>

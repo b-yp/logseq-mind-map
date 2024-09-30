@@ -9,10 +9,11 @@ import { useLogseqStore } from "@/stores";
 import messages from "@/lang/index";
 import "@/css/tailwind.css";
 
+const locale = localStorage.getItem("localeValue");
 const i18n = createI18n({
   legacy: false,
-  locale: "zhCn",
-  fallbackLocale: "enUs",
+  locale: locale || "English",
+  fallbackLocale: "简体中文",
   messages,
 });
 
