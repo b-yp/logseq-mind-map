@@ -31,6 +31,7 @@
     "daisyui": "^4.12.10",
     "eslint": "^9.11.1",
     "logseq-proxy": "^0.1.2",
+    "path": "^0.12.7",
     "postcss": "^8.4.47",
     "semantic-release": "^24.1.1",
     "tailwindcss": "^3.4.13",

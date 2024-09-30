@@ -4,10 +4,10 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
 
-import App from "./App.vue";
-import useMindStore from "./stores/mind";
-import messages from "./lang/index";
-import "./css/tailwind.css";
+import App from "@/App.vue";
+import { useLogseqStore } from "@/stores";
+import messages from "@/lang/index";
+import "@/css/tailwind.css";
 
 const i18n = createI18n({
   legacy: false,
@@ -23,8 +23,8 @@ app.use(i18n);
 
 let isMounted = false;
 
-const mindStore = useMindStore();
-const { setPage, setTrees, setCurrentGraph } = mindStore;
+const logseqStore = useLogseqStore();
+const { setPage, setTrees, setCurrentGraph } = logseqStore;
 
 if (import.meta.env.VITE_MODE === "web") {
   // run in browser

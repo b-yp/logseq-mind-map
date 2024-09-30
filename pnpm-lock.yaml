@@ -57,6 +57,9 @@ importers:
       logseq-proxy:
         specifier: ^0.1.2
         version: 0.1.2
+      path:
+        specifier: ^0.12.7
+        version: 0.12.7
       postcss:
         specifier: ^8.4.47
         version: 8.4.47

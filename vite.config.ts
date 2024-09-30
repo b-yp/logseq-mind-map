@@ -2,6 +2,7 @@ import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import { existsSync } from "fs";
+import path from "path";
 
 import packageJSON from "./package.json";
 
@@ -24,6 +25,11 @@ export default defineConfig(async ({ command, mode }) => {
     define: {
       mockSettings: getMockSettings(mode === "web"),
       __APP_VERSION__: JSON.stringify(packageJSON.version),
+    },
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "src"),
+      },
     },
   };
 });

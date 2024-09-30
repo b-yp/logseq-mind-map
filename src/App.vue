@@ -4,19 +4,22 @@ import hotkeys from "hotkeys-js";
 import { useI18n } from "vue-i18n";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
-import { themeList } from "simple-mind-map/src/constants/constant";
 
-import useMindStore from "./stores/mind";
-import { getData } from "./utils";
+import { useLogseqStore, useMindMapStore } from "@/stores";
+import { getData } from "@/utils";
+import ToolBar from "@/components/ToolBar.vue";
+import Theme from "@/components/Theme.vue";
 
 const { t } = useI18n();
 
 MindMap.usePlugin(NodeImgAdjust);
 
-const mindStore = useMindStore();
-const { getPage, getTrees, getCurrentGraph } = mindStore;
+const logseqStore = useLogseqStore();
+const mindMapStore = useMindMapStore();
+const { getPage, getTrees, getCurrentGraph } = logseqStore;
+const { getMindMap, setMindMap } = mindMapStore;
 
-const mindMap = ref<MindMap | null>(null);
+const theme = ref<"light" | "dark">("light");
 
 onMounted(() => {
   setTimeout(() => {
@@ -24,7 +27,7 @@ onMounted(() => {
     const mind = new MindMap({
       el: mindMapContainer,
     } as any);
-    mindMap.value = mind;
+    setMindMap(mind);
   }, 100);
 
   hotkeys("esc", () => {
@@ -34,27 +37,29 @@ onMounted(() => {
   console.log("theme.title", t("theme.title"));
 });
 
-watch([mindMap, getPage, getTrees, getCurrentGraph], () => {
+watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
   const currentGraph = getCurrentGraph();
   const trees = getTrees();
   const page = getPage();
-  if (!mindMap.value || !currentGraph) return;
-  mindMap.value.updateData({
+  const mindMap = getMindMap();
+  if (!mindMap || !currentGraph) return;
+  mindMap.updateData({
     data: {
       text: page?.name,
     },
     children: getData(trees, currentGraph),
   });
 
-  setTimeout(mindMap.value.view.fit, 500);
+  setTimeout(mindMap.view.fit, 500);
 });
 
 watch(
-  () => mindMap.value,
+  getMindMap,
   () => {
-    if (!mindMap.value) return;
-    mindMap.value.on("node_tree_render_end", () => {
-      mindMap.value?.view.fit(() => {}, false, 20);
+    const mindMap = getMindMap();
+    if (!mindMap) return;
+    mindMap.on("node_tree_render_end", () => {
+      mindMap.view.fit(() => {}, false, 20);
     });
   }
 );
@@ -62,11 +67,22 @@ watch(
 const close = () => {
   logseq.hideMainUI();
 };
+
+const toggleTheme = () => {
+  theme.value = theme.value === "light" ? "dark" : "light";
+};
 </script>
 
 <template>
-  <div id="main">
+  <div id="main" :data-theme="theme">
     <div id="mindMapContainer"></div>
+    <div class="theme-toggle fixed top-5 right-5 flex items-center gap-2">
+      <span>🌞</span>
+      <input class="toggle" type="checkbox" @change="toggleTheme" />
+      <span>🌚</span>
+    </div>
+    <ToolBar />
+    <Theme />
   </div>
 </template>
 

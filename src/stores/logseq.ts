@@ -2,24 +2,24 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { AppGraphInfo, BlockEntity, PageEntity } from "@logseq/libs/dist/LSPlugin.user";
 
-interface MindStore {
+interface LogseqStore {
     page: PageEntity | BlockEntity | null;
     trees: Array<BlockEntity>;
     currentGraph: AppGraphInfo | null;
 }
 
-const useMindStore = defineStore("mind", () => {
-    const page = ref<MindStore["page"]>(null);
-    const trees = ref<MindStore["trees"]>([]);
-    const currentGraph = ref<MindStore["currentGraph"]>(null);
+const useLogseqStore = defineStore("logseq", () => {
+    const page = ref<LogseqStore["page"]>(null);
+    const trees = ref<LogseqStore["trees"]>([]);
+    const currentGraph = ref<LogseqStore["currentGraph"]>(null);
 
     const getPage = () => page.value;
     const getTrees = () => trees.value;
     const getCurrentGraph = () => currentGraph.value;
 
-    const setPage = (p: MindStore["page"]) => page.value = p;
-    const setTrees = (t: MindStore["trees"]) => trees.value = t;
-    const setCurrentGraph = (g: MindStore["currentGraph"]) => currentGraph.value = g;
+    const setPage = (p: LogseqStore["page"]) => page.value = p;
+    const setTrees = (t: LogseqStore["trees"]) => trees.value = t;
+    const setCurrentGraph = (g: LogseqStore["currentGraph"]) => currentGraph.value = g;
 
     return {
         page,
@@ -32,4 +32,4 @@ const useMindStore = defineStore("mind", () => {
     };
 });
 
-export default useMindStore;
+export default useLogseqStore;
