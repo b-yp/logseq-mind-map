@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref } from "vue";
 import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
-import { getData } from "@/utils";
+import { getData, showToast } from "@/utils";
 import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import Theme from "@/components/Theme.vue";
@@ -18,6 +18,8 @@ const commonStore = useCommonStore();
 const { getPage, getTrees, getCurrentGraph } = logseqStore;
 const { getMindMap, setMindMap } = mindMapStore;
 const { getIsDarkUI } = commonStore;
+
+const activeNode = ref<any>(null);
 
 onMounted(() => {
   setTimeout(() => {
@@ -42,6 +44,7 @@ watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
   mindMap.updateData({
     data: {
       text: page?.name,
+      uid: page?.uuid,
     },
     children: getData(trees, currentGraph),
   });
@@ -52,13 +55,37 @@ watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
 watch(getMindMap, () => {
   const mindMap = getMindMap();
   if (!mindMap) return;
-  mindMap.on("node_tree_render_end", () => {
-    mindMap.view.fit(() => {}, false, 20);
-  });
+
+  mindMap.on("node_tree_render_end", handleNodeTreeRenderEnd);
+  mindMap.on("node_active", handleNodeActive);
+  mindMap.on("hide_text_edit", handleHideTextEdit);
 });
 
 const close = () => {
   logseq.hideMainUI();
+  const mindMap = getMindMap();
+  if (!mindMap) return;
+
+  mindMap.off("node_tree_render_end", handleNodeTreeRenderEnd);
+  mindMap.off("node_active", handleNodeActive);
+  mindMap.off("hide_text_edit", handleHideTextEdit);
+};
+
+const handleNodeTreeRenderEnd = () => {
+  const mindMap = getMindMap();
+  if (!mindMap) return;
+  mindMap.view.fit(() => {}, false, 20);
+};
+
+const handleNodeActive = (res: any) => {
+  activeNode.value = res;
+};
+
+const handleHideTextEdit = () => {
+  const data = activeNode.value?.getData();
+  logseq.Editor.updateBlock(data.uid, data.text).then(() => {
+    showToast("Update Success!", "success");
+  });
 };
 </script>
 

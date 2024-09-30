@@ -18,6 +18,7 @@ export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): 
 const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<MindMap.PureData> => {
   const data: Partial<MindMap.PureData> = {
     text: block.content.trim(),
+    uid: block.uuid,
   }
   if (block.propertiesTextValues) {
     const propertiesKeys = Object.keys(block.propertiesTextValues);
@@ -44,4 +45,25 @@ const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<Min
     }
   }
   return data;
+};
+
+export const showToast = (message: string, type: string) => {
+  const isWeb = import.meta.env.VITE_MODE === "web";
+  if (isWeb) {
+    const toast = document.createElement("div");
+    toast.className = "toast toast-top toast-end";
+    const alert = document.createElement("div");
+    alert.className = `alert alert-${type}`;
+    const span = document.createElement("span");
+    span.textContent = message;
+    alert.appendChild(span);
+    toast.appendChild(alert);
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 3000);
+  } else {
+    logseq.UI.showMsg(message, type);
+  }
 };
