@@ -12,7 +12,7 @@ export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): 
           : [],
       });
     });
-  return data;
+  return data.filter((item) => item.data.text);
 };
 
 const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<MindMap.PureData> => {
