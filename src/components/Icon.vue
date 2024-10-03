@@ -5,21 +5,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { toRefs } from "vue";
 
 const props = defineProps<{
   name: string;
   className?: string;
 }>();
 
-const name = ref(props.name);
-const className = ref(props.className);
+const { name, className } = toRefs(props);
 </script>
 
 <style scoped>
   .icon {
-    width: 1em;
-    height: 1em;
+    width: 1.5em;
+    height: 1.5em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;

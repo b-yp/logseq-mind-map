@@ -1,97 +1,50 @@
-import defaultImg from "@/assets/images/themes/default.jpg";
-import classicImg from "@/assets/images/themes/classic.jpg";
-import minionsImg from "@/assets/images/themes/minions.jpg";
-import pinkGrapeImg from "@/assets/images/themes/pinkGrape.jpg";
-import mintImg from "@/assets/images/themes/mint.jpg";
-import goldImg from "@/assets/images/themes/gold.jpg";
-import vitalityOrangeImg from "@/assets/images/themes/vitalityOrange.jpg";
-import greenLeafImg from "@/assets/images/themes/greenLeaf.jpg";
-import dark2Img from "@/assets/images/themes/dark2.jpg";
-import skyGreenImg from "@/assets/images/themes/skyGreen.jpg";
-import classic2Img from "@/assets/images/themes/classic2.jpg";
-import classic3Img from "@/assets/images/themes/classic3.jpg";
-import classic4Img from "@/assets/images/themes/classic4.jpg";
-import classicGreenImg from "@/assets/images/themes/classicGreen.jpg";
-import classicBlueImg from "@/assets/images/themes/classicBlue.jpg";
-import blueSkyImg from "@/assets/images/themes/blueSky.jpg";
-import brainImpairedPinkImg from "@/assets/images/themes/brainImpairedPink.jpg";
-import darkImg from "@/assets/images/themes/dark.jpg";
-import earthYellowImg from "@/assets/images/themes/earthYellow.jpg";
-import freshGreenImg from "@/assets/images/themes/freshGreen.jpg";
-import freshRedImg from "@/assets/images/themes/freshRed.jpg";
-import romanticPurpleImg from "@/assets/images/themes/romanticPurple.jpg";
-import simpleBlackImg from "@/assets/images/themes/simpleBlack.jpg";
-import courseGreenImg from "@/assets/images/themes/courseGreen.jpg";
-import coffeeImg from "@/assets/images/themes/coffee.jpg";
-import redSpiritImg from "@/assets/images/themes/redSpirit.jpg";
-import blackHumourImg from "@/assets/images/themes/blackHumour.jpg";
-import lateNightOfficeImg from "@/assets/images/themes/lateNightOffice.jpg";
-import blackGoldImg from "@/assets/images/themes/blackGold.jpg";
-import autumnImg from "@/assets/images/themes/autumn.jpg";
-import avocadoImg from "@/assets/images/themes/avocado.jpg";
-import orangeJuiceImg from "@/assets/images/themes/orangeJuice.jpg";
-import oreoImg from "@/assets/images/themes/oreo.jpg";
-import shallowSeaImg from "@/assets/images/themes/shallowSea.jpg";
-import roseImg from "@/assets/images/themes/rose.jpg";
-import seaBlueLineImg from "@/assets/images/themes/seaBlueLine.jpg";
-import neonLampImg from "@/assets/images/themes/neonLamp.jpg";
-import darkNightLceBladeImg from "@/assets/images/themes/darkNightLceBlade.jpg";
-import morandiImg from "@/assets/images/themes/morandi.jpg";
-import classic5Img from "@/assets/images/themes/classic5.jpg";
-import dark3Img from "@/assets/images/themes/dark3.jpg";
-import dark4Img from "@/assets/images/themes/dark4.jpg";
-import cactusImg from "@/assets/images/themes/cactus.jpg";
-import classic6Img from "@/assets/images/themes/classic6.jpg";
-import classic7Img from "@/assets/images/themes/classic7.jpg";
-import lemonBubblesImg from "@/assets/images/themes/lemonBubbles.jpg";
-
-export const themeMap = {
-  default: defaultImg,
-  classic: classicImg,
-  minions: minionsImg,
-  pinkGrape: pinkGrapeImg,
-  mint: mintImg,
-  gold: goldImg,
-  vitalityOrange: vitalityOrangeImg,
-  greenLeaf: greenLeafImg,
-  dark2: dark2Img,
-  skyGreen: skyGreenImg,
-  classic2: classic2Img,
-  classic3: classic3Img,
-  classic4: classic4Img,
-  classicGreen: classicGreenImg,
-  classicBlue: classicBlueImg,
-  blueSky: blueSkyImg,
-  brainImpairedPink: brainImpairedPinkImg,
-  dark: darkImg,
-  earthYellow: earthYellowImg,
-  freshGreen: freshGreenImg,
-  freshRed: freshRedImg,
-  romanticPurple: romanticPurpleImg,
-  simpleBlack: simpleBlackImg,
-  courseGreen: courseGreenImg,
-  coffee: coffeeImg,
-  redSpirit: redSpiritImg,
-  blackHumour: blackHumourImg,
-  lateNightOffice: lateNightOfficeImg,
-  blackGold: blackGoldImg,
-  autumn: autumnImg,
-  avocado: avocadoImg,
-  orangeJuice: orangeJuiceImg,
-  oreo: oreoImg,
-  shallowSea: shallowSeaImg,
-  lemonBubbles: lemonBubblesImg,
-  rose: roseImg,
-  seaBlueLine: seaBlueLineImg,
-  neonLamp: neonLampImg,
-  darkNightLceBlade: darkNightLceBladeImg,
-  morandi: morandiImg,
-  classic5: classic5Img,
-  dark3: dark3Img,
-  dark4: dark4Img,
-  cactus: cactusImg,
-  classic6: classic6Img,
-  classic7: classic7Img,
+export const themeImageMap = {
+  default: await import('@/assets/images/themes/default.jpg'),
+  classic: await import('@/assets/images/themes/classic.jpg'),
+  minions: await import('@/assets/images/themes/minions.jpg'),
+  pinkGrape: await import('@/assets/images/themes/pinkGrape.jpg'),
+  mint: await import('@/assets/images/themes/mint.jpg'),
+  gold: await import('@/assets/images/themes/gold.jpg'),
+  vitalityOrange: await import('@/assets/images/themes/vitalityOrange.jpg'),
+  greenLeaf: await import('@/assets/images/themes/greenLeaf.jpg'),
+  dark2: await import('@/assets/images/themes/dark2.jpg'),
+  skyGreen: await import('@/assets/images/themes/skyGreen.jpg'),
+  classic2: await import('@/assets/images/themes/classic2.jpg'),
+  classic3: await import('@/assets/images/themes/classic3.jpg'),
+  classic4: await import('@/assets/images/themes/classic4.jpg'),
+  classicGreen: await import('@/assets/images/themes/classicGreen.jpg'),
+  classicBlue: await import('@/assets/images/themes/classicBlue.jpg'),
+  blueSky: await import('@/assets/images/themes/blueSky.jpg'),
+  brainImpairedPink: await import('@/assets/images/themes/brainImpairedPink.jpg'),
+  dark: await import('@/assets/images/themes/dark.jpg'),
+  earthYellow: await import('@/assets/images/themes/earthYellow.jpg'),
+  freshGreen: await import('@/assets/images/themes/freshGreen.jpg'),
+  freshRed: await import('@/assets/images/themes/freshRed.jpg'),
+  romanticPurple: await import('@/assets/images/themes/romanticPurple.jpg'),
+  simpleBlack: await import('@/assets/images/themes/simpleBlack.jpg'),
+  courseGreen: await import('@/assets/images/themes/courseGreen.jpg'),
+  coffee: await import('@/assets/images/themes/coffee.jpg'),
+  redSpirit: await import('@/assets/images/themes/redSpirit.jpg'),
+  blackHumour: await import('@/assets/images/themes/blackHumour.jpg'),
+  lateNightOffice: await import('@/assets/images/themes/lateNightOffice.jpg'),
+  blackGold: await import('@/assets/images/themes/blackGold.jpg'),
+  autumn: await import('@/assets/images/themes/autumn.jpg'),
+  avocado: await import('@/assets/images/themes/avocado.jpg'),
+  orangeJuice: await import('@/assets/images/themes/orangeJuice.jpg'),
+  oreo: await import('@/assets/images/themes/oreo.jpg'),
+  shallowSea: await import('@/assets/images/themes/shallowSea.jpg'),
+  lemonBubbles: await import('@/assets/images/themes/lemonBubbles.jpg'),
+  rose: await import('@/assets/images/themes/rose.jpg'),
+  seaBlueLine: await import('@/assets/images/themes/seaBlueLine.jpg'),
+  neonLamp: await import('@/assets/images/themes/neonLamp.jpg'),
+  darkNightLceBlade: await import('@/assets/images/themes/darkNightLceBlade.jpg'),
+  morandi: await import('@/assets/images/themes/morandi.jpg'),
+  classic5: await import('@/assets/images/themes/classic5.jpg'),
+  dark3: await import('@/assets/images/themes/dark3.jpg'),
+  dark4: await import('@/assets/images/themes/dark4.jpg'),
+  cactus: await import('@/assets/images/themes/cactus.jpg'),
+  classic6: await import('@/assets/images/themes/classic6.jpg'),
+  classic7: await import('@/assets/images/themes/classic7.jpg'),
 };
 
 export const baiduThemes = [

@@ -8,7 +8,7 @@ import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData, showToast } from "@/utils";
 import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
-import Theme from "@/components/Theme.vue";
+import ToolDrawer from "@/components/ToolDrawer.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 
@@ -30,9 +30,7 @@ onMounted(() => {
     setMindMap(mind);
   }, 100);
 
-  hotkeys("esc", () => {
-    close();
-  });
+  hotkeys("esc", close);
 });
 
 watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
@@ -94,7 +92,7 @@ const handleHideTextEdit = () => {
     <div id="mindMapContainer"></div>
     <SettingMenu />
     <ToolBar />
-    <Theme />
+    <ToolDrawer />
   </div>
 </template>
 

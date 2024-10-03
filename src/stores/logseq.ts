@@ -23,6 +23,8 @@ const useLogseqStore = defineStore("logseq", () => {
 
     return {
         page,
+        trees,
+        currentGraph,
         getPage,
         getTrees,
         getCurrentGraph,

@@ -1,70 +1,17 @@
 <template>
-  <div
-    class="drawer drawer-end fixed top-1/2 right-0 h-[80vh] -translate-y-1/2"
-    :class="{ 'drawer-open': getIsThemeDrawerOpen() }"
-    :style="{ width: getIsThemeDrawerOpen() ? '20vw' : '0' }"
-  >
-    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-side z-50 h-full shadow-xl rounded-l-xl">
-      <label
-        for="my-drawer-4"
-        aria-label="close sidebar"
-        class="drawer-overlay"
-      ></label>
-      <div class="card bg-base-100 w-[20vw] h-full">
-        <div class="card-body h-full p-6">
-          <div
-            class="card-actions justify-between border-b border-gray-200 pb-2"
-          >
-            <h2 class="text-xl font-bold">{{ $t("theme.title") }}</h2>
-            <button
-              class="btn btn-square btn-sm"
-              @click="setIsThemeDrawerOpen(false)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div role="tablist" class="tabs tabs-bordered">
-            <a
-              v-for="item in groupList"
-              :key="item.name"
-              role="tab"
-              class="tab"
-              :class="{ 'tab-active': activeName === item.name }"
-              @click="handleTabClick(item.name)"
-              >{{ $t(item.name) }}</a
-            >
-          </div>
-          <div class="flex-1 overflow-y-auto mt-2">
-            <div
-              v-for="item in currentList"
-              :key="item.value"
-              class="flex flex-col items-center gap-2 pb-2 mb-4 cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:shadow-xl hover:border-gray-300"
-              :class="{
-                'border-indigo-600': getTheme() === item.value,
-                'hover:border-indigo-600': getTheme() === item.value,
-              }"
-              @click="useTheme(item)"
-            >
-              <img class="h-auto" :src="themeMap[item.value]" alt="" />
-              <span>{{ item.name }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div role="tablist" class="tabs tabs-bordered">
+    <a v-for="item in groupList" :key="item.name" role="tab" class="tab"
+      :class="{ 'tab-active': activeName === item.name }" @click="handleTabClick(item.name)">{{ $t(item.name) }}</a>
+  </div>
+  <div class="flex-1 overflow-y-auto mt-2">
+    <div v-for="item in currentList" :key="item.value"
+      class="flex flex-col items-center gap-2 pb-2 mb-4 cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:shadow-xl hover:border-gray-300"
+      :class="{
+        'border-indigo-600': getTheme() === item.value,
+        'hover:border-indigo-600': getTheme() === item.value,
+      }" @click="useTheme(item)">
+      <img class="h-auto" :src="themeImageMap[item.value].default" :alt="item.name" />
+      <span>{{ item.name }}</span>
     </div>
   </div>
 </template>
@@ -73,13 +20,13 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { themeList as themeListData } from "simple-mind-map/src/constants/constant";
 
-import { themeMap, baiduThemes } from "@/config/theme";
+import { themeImageMap, baiduThemes } from "@/config/theme";
 import { useMindMapStore, useCommonStore } from "@/stores";
 
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 const { getMindMap, getTheme, setTheme } = mindMapStore;
-const { getIsThemeDrawerOpen, setIsThemeDrawerOpen, setIsDarkUI } = commonStore;
+const { setIsDarkUI } = commonStore;
 
 interface Theme {
   name: string;
@@ -129,9 +76,7 @@ const initGroup = () => {
     },
     {
       name: "theme.dark",
-      list: themeList.value.filter((item) => {
-        return item.dark;
-      }),
+      list: themeList.value.filter((item) => item.dark),
     },
     {
       name: "theme.simple",
