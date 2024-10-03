@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, watch, ref } from "vue";
+import { storeToRefs } from "pinia";
 import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
@@ -15,9 +16,10 @@ MindMap.usePlugin(NodeImgAdjust);
 const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
-const { getPage, getTrees, getCurrentGraph } = logseqStore;
-const { getMindMap, setMindMap } = mindMapStore;
-const { getIsDarkUI } = commonStore;
+const { page, trees, currentGraph } = storeToRefs(logseqStore);
+const { setMindMap } = mindMapStore;
+const { mindMap } = storeToRefs(mindMapStore);
+const { isDarkUI } = storeToRefs(commonStore);
 
 const activeNode = ref<any>(null);
 
@@ -33,46 +35,36 @@ onMounted(() => {
   hotkeys("esc", close);
 });
 
-watch([getMindMap, getPage, getTrees, getCurrentGraph], () => {
-  const currentGraph = getCurrentGraph();
-  const trees = getTrees();
-  const page = getPage();
-  const mindMap = getMindMap();
-  if (!mindMap || !currentGraph) return;
-  mindMap.updateData({
+watch([mindMap, page, trees, currentGraph], () => {
+  if (!mindMap.value || !currentGraph.value) return;
+  mindMap.value.updateData({
     data: {
-      text: page?.name,
-      uid: page?.uuid,
+      text: page.value?.name,
+      uid: page.value?.id,
     },
-    children: getData(trees, currentGraph),
+    children: getData(trees.value, currentGraph.value),
   });
 
-  setTimeout(mindMap.view.fit, 500);
+  setTimeout(mindMap.value.view.fit, 500);
 });
 
-watch(getMindMap, () => {
-  const mindMap = getMindMap();
-  if (!mindMap) return;
-
-  mindMap.on("node_tree_render_end", handleNodeTreeRenderEnd);
-  mindMap.on("node_active", handleNodeActive);
-  mindMap.on("hide_text_edit", handleHideTextEdit);
+watch(mindMap, () => {
+  if (!mindMap.value) return;
+  mindMap.value.on("node_tree_render_end", handleNodeTreeRenderEnd);
+  mindMap.value.on("node_active", handleNodeActive);
+  mindMap.value.on("hide_text_edit", handleHideTextEdit);
 });
 
 const close = () => {
   logseq.hideMainUI();
-  const mindMap = getMindMap();
-  if (!mindMap) return;
-
-  mindMap.off("node_tree_render_end", handleNodeTreeRenderEnd);
-  mindMap.off("node_active", handleNodeActive);
-  mindMap.off("hide_text_edit", handleHideTextEdit);
+  if (!mindMap.value) return;
+  mindMap.value.off("node_tree_render_end", handleNodeTreeRenderEnd);
+  mindMap.value.off("node_active", handleNodeActive);
+  mindMap.value.off("hide_text_edit", handleHideTextEdit);
 };
 
 const handleNodeTreeRenderEnd = () => {
-  const mindMap = getMindMap();
-  if (!mindMap) return;
-  mindMap.view.fit(() => {}, false, 20);
+  mindMap.value?.view.fit(() => { }, false, 20);
 };
 
 const handleNodeActive = (res: any) => {
@@ -88,7 +80,7 @@ const handleHideTextEdit = () => {
 </script>
 
 <template>
-  <div id="main" :data-theme="getIsDarkUI() ? 'dark' : 'light'">
+  <div id="main" :data-theme="isDarkUI ? 'dark' : 'light'">
     <div id="mindMapContainer"></div>
     <SettingMenu />
     <ToolBar />

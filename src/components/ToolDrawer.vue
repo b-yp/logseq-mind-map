@@ -1,7 +1,7 @@
 <template>
-  <Drawer :title="$t(`toolBar.${getCurrentDrawer()}`)" :isOpen="getIsDrawerOpen()" @close="onClose">
-    <Theme v-if="getCurrentDrawer() === 'theme'" />
-    <Structure v-if="getCurrentDrawer() === 'structure'" />
+  <Drawer :title="$t(`toolBar.${currentDrawer}`)" :isOpen="isDrawerOpen" @close="onClose">
+    <Theme v-if="currentDrawer === 'theme'" />
+    <Structure v-if="currentDrawer === 'structure'" />
   </Drawer>
 </template>
 
@@ -11,9 +11,11 @@ import { useCommonStore } from "@/stores";
 import Drawer from "./Drawer.vue";
 import Theme from "./Theme.vue";
 import Structure from "./Structure.vue";
+import { storeToRefs } from "pinia";
 
 const commonStore = useCommonStore();
-const { getIsDrawerOpen, getCurrentDrawer, setIsDrawerOpen, setCurrentDrawer } = commonStore;
+const { setIsDrawerOpen, setCurrentDrawer } = commonStore;
+const { isDrawerOpen, currentDrawer } = storeToRefs(commonStore)
 
 const onClose = () => {
   setIsDrawerOpen(false);

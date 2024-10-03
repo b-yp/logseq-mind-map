@@ -8,7 +8,7 @@
     </div>
     <div class="theme-toggle flex items-center gap-2">
       <span>🌞</span>
-      <input class="toggle" type="checkbox" :checked="getIsDarkUI()" @change="toggleTheme" />
+      <input class="toggle" type="checkbox" :checked="isDarkUI" @change="toggleTheme" />
       <span>🌚</span>
     </div>
   </div>
@@ -18,6 +18,7 @@
 import { useI18n } from "vue-i18n";
 import { useCommonStore, useMindMapStore } from "@/stores";
 import lang from "@/lang";
+import { storeToRefs } from "pinia";
 
 const { locale } = useI18n();
 
@@ -25,12 +26,13 @@ const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 
 const { setTheme } = mindMapStore;
-const { getIsDarkUI, setIsDarkUI } = commonStore;
+const { setIsDarkUI } = commonStore;
+const { isDarkUI } = storeToRefs(commonStore)
 
 const langs = Object.keys(lang);
 
 const toggleTheme = () => {
-  if (getIsDarkUI()) {
+  if (isDarkUI.value) {
     setIsDarkUI(false);
     setTheme("default");
   } else {

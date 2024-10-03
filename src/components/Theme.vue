@@ -7,8 +7,8 @@
     <div v-for="item in currentList" :key="item.value"
       class="flex flex-col items-center gap-2 pb-2 mb-4 cursor-pointer rounded-md overflow-hidden border border-gray-200 hover:shadow-xl hover:border-gray-300"
       :class="{
-        'border-indigo-600': getTheme() === item.value,
-        'hover:border-indigo-600': getTheme() === item.value,
+        'border-indigo-600': theme === item.value,
+        'hover:border-indigo-600': theme === item.value,
       }" @click="useTheme(item)">
       <img class="h-auto" :src="themeImageMap[item.value].default" :alt="item.name" />
       <span>{{ item.name }}</span>
@@ -22,10 +22,12 @@ import { themeList as themeListData } from "simple-mind-map/src/constants/consta
 
 import { themeImageMap, baiduThemes } from "@/config/theme";
 import { useMindMapStore, useCommonStore } from "@/stores";
+import { storeToRefs } from "pinia";
 
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
-const { getMindMap, getTheme, setTheme } = mindMapStore;
+const { setTheme } = mindMapStore;
+const { mindMap, theme } = storeToRefs(mindMapStore)
 const { setIsDarkUI } = commonStore;
 
 interface Theme {
@@ -48,15 +50,12 @@ onMounted(() => {
   initGroup();
 });
 
-watch(getMindMap, () => {
-  const mindMap = getMindMap();
-  setTheme(mindMap?.getTheme() || "");
+watch(mindMap, () => {
+  setTheme(mindMap.value?.getTheme() || "");
 });
 
-watch(getTheme, () => {
-  const mindMap = getMindMap();
-  if (!mindMap) return;
-  mindMap.setTheme(getTheme());
+watch(theme, () => {
+  mindMap.value?.setTheme(theme.value);
 });
 
 const initGroup = () => {
@@ -91,8 +90,7 @@ const handleTabClick = (groupName: string) => {
 };
 
 const useTheme = (currentTheme: Theme) => {
-  const theme = getTheme();
-  if (currentTheme.value === theme) return;
+  if (currentTheme.value === theme.value) return;
   setTheme(currentTheme.value);
   setDark(currentTheme.dark)
 };
