@@ -5,9 +5,9 @@ export default {
     theme: '主题',
     structure: '结构',
     outline: '大纲',
+    search: '搜索',
   },
   theme: {
-    title: '主题',
     classics: '经典',
     dark: '深色',
     simple: '朴素',
@@ -22,5 +22,12 @@ export default {
     [CONSTANTS.LAYOUT.TIMELINE2]: '时间轴2',
     [CONSTANTS.LAYOUT.VERTICAL_TIMELINE]: '竖向时间轴',
     [CONSTANTS.LAYOUT.FISHBONE]: '鱼骨图',
+  },
+  search: {
+    placeholder: '请输入搜索内容',
+    current: '当前',
+    total: '总数',
+    next: '下一个',
+    empty: '没有找到任何结果',
   }
 }

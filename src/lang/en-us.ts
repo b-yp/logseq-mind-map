@@ -5,6 +5,7 @@ export default {
     theme: 'Theme',
     structure: 'Structure',
     outline: 'Outline',
+    search: 'Search',
   },
   theme: {
     classics: 'Classics',
@@ -21,5 +22,12 @@ export default {
     [CONSTANTS.LAYOUT.TIMELINE2]: 'Timeline2',
     [CONSTANTS.LAYOUT.VERTICAL_TIMELINE]: 'Vertical Timeline',
     [CONSTANTS.LAYOUT.FISHBONE]: 'Fishbone',
+  },
+  search: {
+    placeholder: 'Please enter the search content',
+    current: 'Current',
+    total: 'Total',
+    next: 'Next',
+    empty: 'No results found',
   }
 }

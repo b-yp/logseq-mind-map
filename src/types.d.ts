@@ -36,4 +36,9 @@ declare namespace IMindMap {
     data: Partial<PureData>;
     children: Data[];
   }
+
+  interface SearchInfo {
+    currentIndex: number;
+    total: number;
+  }
 }

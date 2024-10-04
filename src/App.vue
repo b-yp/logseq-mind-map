@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
+import Search from "simple-mind-map/src/plugins/Search.js";
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData, showToast } from "@/utils";
@@ -12,12 +13,13 @@ import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
+MindMap.usePlugin(Search);
 
 const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 const { page, trees, currentGraph } = storeToRefs(logseqStore);
-const { setMindMap, setData } = mindMapStore;
+const { setMindMap, setData, setSearchInfo } = mindMapStore;
 const { mindMap } = storeToRefs(mindMapStore);
 const { isDarkUI } = storeToRefs(commonStore);
 
@@ -54,6 +56,7 @@ watch(mindMap, () => {
   mindMap.value.on("node_active", handleNodeActive);
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
   mindMap.value.on('data_change', setData);
+  mindMap.value.on('search_info_change', setSearchInfo);
 });
 
 const close = () => {
@@ -63,6 +66,7 @@ const close = () => {
   mindMap.value.off("node_active", handleNodeActive);
   mindMap.value.off("hide_text_edit", handleHideTextEdit);
   mindMap.value.off('data_change', setData);
+  mindMap.value.off('search_info_change', setSearchInfo);
 };
 
 const handleNodeTreeRenderEnd = () => {

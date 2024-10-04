@@ -51,5 +51,14 @@ const toolBarData = [
       setCurrentDrawer("outline");
     },
   },
+  {
+    key: "search",
+    icon: "search",
+    title: "toolBar.search",
+    onclick: () => {
+      setIsDrawerOpen(true);
+      setCurrentDrawer("search");
+    },
+  },
 ];
 </script>
