@@ -2,20 +2,29 @@
   <Drawer :title="$t(`toolBar.${currentDrawer}`)" :isOpen="isDrawerOpen" @close="onClose">
     <Theme v-if="currentDrawer === 'theme'" />
     <Structure v-if="currentDrawer === 'structure'" />
+    <Outline v-if="currentDrawer === 'outline'" :data="outlineData" />
   </Drawer>
 </template>
 
 <script setup lang="ts">
-import { useCommonStore } from "@/stores";
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useCommonStore, useMindMapStore } from "@/stores";
 
 import Drawer from "./Drawer.vue";
 import Theme from "./Theme.vue";
 import Structure from "./Structure.vue";
-import { storeToRefs } from "pinia";
+import Outline from "./Outline.vue";
 
 const commonStore = useCommonStore();
+const mindMapStore = useMindMapStore();
 const { setIsDrawerOpen, setCurrentDrawer } = commonStore;
 const { isDrawerOpen, currentDrawer } = storeToRefs(commonStore)
+const { data } = storeToRefs(mindMapStore);
+
+const outlineData = computed(() => {
+  return data.value ? [data.value] : []
+})
 
 const onClose = () => {
   setIsDrawerOpen(false);

@@ -4,6 +4,7 @@ export default {
   toolBar: {
     theme: 'Theme',
     structure: 'Structure',
+    outline: 'Outline',
   },
   theme: {
     classics: 'Classics',

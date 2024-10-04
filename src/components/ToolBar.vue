@@ -42,5 +42,14 @@ const toolBarData = [
       setCurrentDrawer("structure");
     },
   },
+  {
+    key: "outline",
+    icon: "outline",
+    title: "toolBar.outline",
+    onclick: () => {
+      setIsDrawerOpen(true);
+      setCurrentDrawer("outline");
+    },
+  },
 ];
 </script>

@@ -4,6 +4,7 @@ export default {
   toolBar: {
     theme: '主题',
     structure: '结构',
+    outline: '大纲',
   },
   theme: {
     title: '主题',

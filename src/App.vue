@@ -17,7 +17,7 @@ const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 const { page, trees, currentGraph } = storeToRefs(logseqStore);
-const { setMindMap } = mindMapStore;
+const { setMindMap, setData } = mindMapStore;
 const { mindMap } = storeToRefs(mindMapStore);
 const { isDarkUI } = storeToRefs(commonStore);
 
@@ -53,6 +53,7 @@ watch(mindMap, () => {
   mindMap.value.on("node_tree_render_end", handleNodeTreeRenderEnd);
   mindMap.value.on("node_active", handleNodeActive);
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
+  mindMap.value.on('data_change', setData);
 });
 
 const close = () => {
@@ -61,6 +62,7 @@ const close = () => {
   mindMap.value.off("node_tree_render_end", handleNodeTreeRenderEnd);
   mindMap.value.off("node_active", handleNodeActive);
   mindMap.value.off("hide_text_edit", handleHideTextEdit);
+  mindMap.value.off('data_change', setData);
 };
 
 const handleNodeTreeRenderEnd = () => {

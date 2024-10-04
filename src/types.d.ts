@@ -1,4 +1,4 @@
-declare namespace MindMap {
+declare namespace IMindMap {
   interface PureData {
     text: string; // 节点的文本，可以是富文本，也就是html格式的，此时richText要设为true
     richText: boolean; // 节点的文本是否是富文本模式
