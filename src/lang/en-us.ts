@@ -1,11 +1,16 @@
 import { CONSTANTS } from "@/config/constant";
 
 export default {
+  menu: {
+    language: 'Language',
+    theme: 'Theme',
+  },
   toolBar: {
     theme: 'Theme',
     structure: 'Structure',
     outline: 'Outline',
     search: 'Search',
+    export: 'Export',
   },
   theme: {
     classics: 'Classics',
@@ -29,5 +34,19 @@ export default {
     total: 'Total',
     next: 'Next',
     empty: 'No results found',
+  },
+  export: {
+    image: {
+      title: 'Image',
+      description: 'Suitable for viewing and sharing',
+    },
+    svg: {
+      title: 'SVG',
+      description: 'Scalable Vector Graphics',
+    },
+    pdf: {
+      title: 'PDF',
+      description: 'Suitable for printing',
+    },
   }
 }

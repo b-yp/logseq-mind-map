@@ -5,6 +5,8 @@ import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 import Search from "simple-mind-map/src/plugins/Search.js";
+import Export from 'simple-mind-map/src/plugins/Export.js'
+import ExportPDF from 'simple-mind-map/src/plugins/ExportPDF.js'
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData, showToast } from "@/utils";
@@ -14,6 +16,8 @@ import ToolDrawer from "@/components/ToolDrawer.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
+MindMap.usePlugin(Export);
+MindMap.usePlugin(ExportPDF);
 
 const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();

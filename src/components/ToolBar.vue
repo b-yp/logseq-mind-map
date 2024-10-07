@@ -60,5 +60,14 @@ const toolBarData = [
       setCurrentDrawer("search");
     },
   },
+  {
+    key: "export",
+    icon: "export",
+    title: "toolBar.export",
+    onclick: () => {
+      setIsDrawerOpen(true);
+      setCurrentDrawer("export");
+    },
+  },
 ];
 </script>

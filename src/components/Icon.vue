@@ -1,5 +1,5 @@
 <template>
-  <svg :class="`icon ${className}`" aria-hidden="true">
+  <svg :class="`icon ${className}`" :style="style" aria-hidden="true">
     <use :xlink:href="`#icon-${name}`"></use>
   </svg>
 </template>
@@ -10,9 +10,10 @@ import { toRefs } from "vue";
 const props = defineProps<{
   name: string;
   className?: string;
+  style?: Record<string, string>;
 }>();
 
-const { name, className } = toRefs(props);
+const { name, className, style } = toRefs(props);
 </script>
 
 <style scoped>

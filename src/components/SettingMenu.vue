@@ -1,15 +1,17 @@
 <template>
   <div class="fixed top-5 right-5 flex gap-4">
-    <div class="lang-toggle">
+    <div class="lang-toggle tooltip tooltip-bottom" :data-tip="$t('menu.language')">
       <select class="select select-info select-xs max-w-xs" @change="changeLang">
         <option disabled selected>Select language</option>
         <option v-for="lang in langs" :key="lang" :selected="lang === locale">{{ lang }}</option>
       </select>
     </div>
-    <div class="theme-toggle flex items-center gap-2">
-      <span>🌞</span>
-      <input class="toggle" type="checkbox" :checked="isDarkUI" @change="toggleTheme" />
-      <span>🌚</span>
+    <div class="tooltip tooltip-bottom" :data-tip="$t('menu.theme')">
+      <div class="theme-toggle flex items-center gap-2">
+        <span>🌞</span>
+        <input class="toggle" type="checkbox" :checked="isDarkUI" @change="toggleTheme" />
+        <span>🌚</span>
+      </div>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 overflow-y-auto">
-    <div class="collapse  collapse-minus bg-base-200" v-if="data?.length || 0 > 0" v-for="item in data"
+    <div class="collapse collapse-minus bg-base-200" v-if="data?.length || 0 > 0" v-for="item in data"
       :key="item.data.uid">
       <input type="checkbox" @click="handleClick(item.data.uid || '')" />
       <div class="collapse-title border-b border-gray-300">{{ item.data.text

@@ -4,6 +4,7 @@
     <Structure v-if="currentDrawer === 'structure'" />
     <Outline v-if="currentDrawer === 'outline'" :data="outlineData" />
     <Search v-if="currentDrawer === 'search'" />
+    <Export v-if="currentDrawer === 'export'" />
   </Drawer>
 </template>
 
@@ -17,6 +18,7 @@ import Theme from "./Theme.vue";
 import Structure from "./Structure.vue";
 import Outline from "./Outline.vue";
 import Search from "./Search.vue";
+import Export from "./Export.vue";
 
 const commonStore = useCommonStore();
 const mindMapStore = useMindMapStore();

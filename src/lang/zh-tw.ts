@@ -1,11 +1,16 @@
 import { CONSTANTS } from "@/config/constant";
 
 export default {
+  menu: {
+    language: '語言',
+    theme: '主題',
+  },
   toolBar: {
     theme: '主題',
     structure: '結構',
     outline: '大綱',
     search: '搜索',
+    export: '匯出',
   },
   theme: {
     classics: '經典',
@@ -29,5 +34,19 @@ export default {
     total: '總數',
     next: '下一個',
     empty: '沒有找到任何結果',
+  },
+  export: {
+    image: {
+      title: '圖片',
+      description: '適合查看分享',
+    },
+    svg: {
+      title: 'SVG',
+      description: '可縮放矢量圖形',
+    },
+    pdf: {
+      title: 'PDF',
+      description: '適合打印',
+    },
   }
 }
