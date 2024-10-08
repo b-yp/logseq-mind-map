@@ -1,6 +1,10 @@
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
+import hljs from 'highlight.js'
 
-export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): IMindMap.Data[] => {
+export const getData = (
+  trees: Array<BlockEntity>,
+  currentGraph: AppGraphInfo
+): IMindMap.Data[] => {
   const data: IMindMap.Data[] = [];
   trees
     .filter((tree) => !!tree.content.trim())
@@ -15,11 +19,14 @@ export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): 
   return data.filter((item) => item.data.text);
 };
 
-const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<IMindMap.PureData> => {
+const getContent = (
+  block: BlockEntity,
+  currentGraph: AppGraphInfo
+): Partial<IMindMap.PureData> => {
   const data: Partial<IMindMap.PureData> = {
     text: block.content.trim(),
     uid: block.uuid,
-  }
+  };
   if (block.propertiesTextValues) {
     const propertiesKeys = Object.keys(block.propertiesTextValues);
     const contentArray = data.text!.split("\n");
@@ -35,14 +42,14 @@ const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<IMi
     const relativeUrl = match[2];
     const absoluteUrl = currentGraph?.path + relativeUrl.slice(2);
 
-    data.richText = true
-    data.image = absoluteUrl
-    data.imageTitle = alt
+    data.richText = true;
+    data.image = absoluteUrl;
+    data.imageTitle = alt;
     data.imageSize = {
       width: 100,
       height: 100,
       custom: false,
-    }
+    };
   }
   return data;
 };
@@ -66,4 +73,31 @@ export const showToast = (message: string, type: string) => {
   } else {
     logseq.UI.showMsg(message, type);
   }
+};
+
+export const highlightCode = (content: string) => {
+  const codeBlockRegex = /```(.*?)\n([\s\S]*?)```/g;
+  let language;
+  let code;
+  let match;
+
+  while ((match = codeBlockRegex.exec(content)) !== null) {
+    language = match[1].trim();
+    code = match[2].trim();
+  }
+  if (!code) return null
+  const highlightedCode = hljs.highlight(
+    code,
+    { language: language || 'plaintext' }
+  ).value
+  const preElement = document.createElement('pre')
+  const codeElement = document.createElement('code')
+  codeElement.innerHTML = highlightedCode
+  preElement.appendChild(codeElement)
+  preElement.style.padding = '4px 8px'
+  preElement.onclick = () => {
+    navigator.clipboard.writeText(code)
+    showToast('代码已复制到剪贴板', 'success')
+  }
+  return preElement
 };

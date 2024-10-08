@@ -9,7 +9,7 @@ import Export from 'simple-mind-map/src/plugins/Export.js'
 import ExportPDF from 'simple-mind-map/src/plugins/ExportPDF.js'
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
-import { getData, showToast } from "@/utils";
+import { getData, showToast, highlightCode } from "@/utils";
 import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
@@ -34,6 +34,8 @@ onMounted(() => {
     const mindMapContainer = document.getElementById("mindMapContainer")!;
     const mind = new MindMap({
       el: mindMapContainer,
+      isUseCustomNodeContent: true,
+      customCreateNodeContent: (node) => highlightCode(node.nodeData.data.text)
     } as any);
     setMindMap(mind);
   }, 100);
@@ -59,8 +61,8 @@ watch(mindMap, () => {
   mindMap.value.on("node_tree_render_end", handleNodeTreeRenderEnd);
   mindMap.value.on("node_active", handleNodeActive);
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
-  mindMap.value.on('data_change', setData);
-  mindMap.value.on('search_info_change', setSearchInfo);
+  mindMap.value.on("data_change", setData);
+  mindMap.value.on("search_info_change", setSearchInfo);
 });
 
 const close = () => {
@@ -69,12 +71,13 @@ const close = () => {
   mindMap.value.off("node_tree_render_end", handleNodeTreeRenderEnd);
   mindMap.value.off("node_active", handleNodeActive);
   mindMap.value.off("hide_text_edit", handleHideTextEdit);
-  mindMap.value.off('data_change', setData);
-  mindMap.value.off('search_info_change', setSearchInfo);
+  mindMap.value.off("data_change", setData);
+  mindMap.value.off("search_info_change", setSearchInfo);
 };
 
 const handleNodeTreeRenderEnd = () => {
-  mindMap.value?.view.fit(() => { }, false, 20);
+  if (!mindMap.value) return;
+  mindMap.value.view.fit(() => { }, false, 20);
 };
 
 const handleNodeActive = (res: any) => {
