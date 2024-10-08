@@ -16,6 +16,7 @@
     "@logseq/libs": "^0.0.17",
     "highlight.js": "^11.10.0",
     "hotkeys-js": "^3.13.7",
+    "monaco-editor": "^0.52.0",
     "pinia": "^2.2.2",
     "simple-mind-map": "^0.11.2",
     "vue": "^3.5.8",

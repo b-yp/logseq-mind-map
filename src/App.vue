@@ -5,14 +5,15 @@ import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 import Search from "simple-mind-map/src/plugins/Search.js";
-import Export from 'simple-mind-map/src/plugins/Export.js'
-import ExportPDF from 'simple-mind-map/src/plugins/ExportPDF.js'
+import Export from "simple-mind-map/src/plugins/Export.js";
+import ExportPDF from "simple-mind-map/src/plugins/ExportPDF.js";
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData, showToast, highlightCode } from "@/utils";
 import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
+import CodeEditor from "@/components/CodeEditor.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
@@ -22,12 +23,22 @@ MindMap.usePlugin(ExportPDF);
 const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
+const { setTrees } = logseqStore;
 const { page, trees, currentGraph } = storeToRefs(logseqStore);
 const { setMindMap, setData, setSearchInfo } = mindMapStore;
 const { mindMap } = storeToRefs(mindMapStore);
 const { isDarkUI } = storeToRefs(commonStore);
 
 const activeNode = ref<any>(null);
+const codeEditor = ref<{
+  isOpen: boolean;
+  language: string;
+  content: string;
+}>({
+  isOpen: false,
+  language: "",
+  content: "",
+});
 
 onMounted(() => {
   setTimeout(() => {
@@ -35,7 +46,14 @@ onMounted(() => {
     const mind = new MindMap({
       el: mindMapContainer,
       isUseCustomNodeContent: true,
-      customCreateNodeContent: (node) => highlightCode(node.nodeData.data.text)
+      customCreateNodeContent: (node) => {
+        codeEditor.value.content = node.nodeData.data.text;
+        return highlightCode(node.nodeData.data.text, ({ language, code }) => {
+          codeEditor.value.isOpen = true;
+          codeEditor.value.language = language;
+          codeEditor.value.content = code;
+        });
+      },
     } as any);
     setMindMap(mind);
   }, 100);
@@ -90,6 +108,26 @@ const handleHideTextEdit = () => {
     showToast("Update Success!", "success");
   });
 };
+
+const handleSave = async (value: string, language: string) => {
+  await logseq.Editor.updateBlock(
+    activeNode.value?.getData()?.uid,
+    `
+\`\`\`${language}
+${value}
+\`\`\`
+    `
+  )
+
+  const tree = page.value?.uuid
+    ? await logseq.Editor.getPageBlocksTree(page.value.uuid)
+    : [];
+  
+  setTrees(tree)
+
+  codeEditor.value.isOpen = false
+  showToast("Update Success!", "success");
+};
 </script>
 
 <template>
@@ -98,6 +136,14 @@ const handleHideTextEdit = () => {
     <SettingMenu />
     <ToolBar />
     <ToolDrawer />
+    <CodeEditor
+      :is-open="codeEditor.isOpen"
+      :value="codeEditor.content"
+      :language="codeEditor.language"
+      :theme="isDarkUI ? 'vs-dark' : 'vs'"
+      @close="codeEditor = { isOpen: false, language: '', content: '' }"
+      @save="handleSave"
+    />
   </div>
 </template>
 

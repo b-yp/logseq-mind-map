@@ -3,6 +3,11 @@ import proxyLogseq from "logseq-proxy";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
+import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
+import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
+import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
 import App from "@/App.vue";
 import { useLogseqStore } from "@/stores";
@@ -27,6 +32,30 @@ let isMounted = false;
 
 const logseqStore = useLogseqStore();
 const { setPage, setTrees, setCurrentGraph } = logseqStore;
+
+self.MonacoEnvironment = {
+	getWorker: function (workerId, label) {
+		switch (label) {
+			case 'json':
+				return new jsonWorker();
+			case 'css':
+			case 'scss':
+			case 'less':
+				return new cssWorker();
+			case 'html':
+			case 'handlebars':
+			case 'razor':
+				return new htmlWorker();
+			case 'typescript':
+			case 'javascript':
+      case 'ts':
+      case 'js':
+				return new tsWorker();
+			default:
+				return new editorWorker();
+		}
+	}
+};
 
 if (import.meta.env.VITE_MODE === "web") {
   // run in browser

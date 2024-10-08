@@ -1,5 +1,5 @@
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
-import hljs from 'highlight.js'
+import hljs, { Language } from 'highlight.js'
 
 export const getData = (
   trees: Array<BlockEntity>,
@@ -75,17 +75,18 @@ export const showToast = (message: string, type: string) => {
   }
 };
 
-export const highlightCode = (content: string) => {
+export const highlightCode = (content: string, fn: ({ language, code }: { language: string, code: string }) => void) => {
   const codeBlockRegex = /```(.*?)\n([\s\S]*?)```/g;
-  let language;
+  let originLanguage;
   let code;
   let match;
 
   while ((match = codeBlockRegex.exec(content)) !== null) {
-    language = match[1].trim();
+    originLanguage = match[1].trim();
     code = match[2].trim();
   }
   if (!code) return null
+  const language = hljs.getLanguage(originLanguage)?.name?.split(',')[0]
   const highlightedCode = hljs.highlight(
     code,
     { language: language || 'plaintext' }
@@ -95,9 +96,6 @@ export const highlightCode = (content: string) => {
   codeElement.innerHTML = highlightedCode
   preElement.appendChild(codeElement)
   preElement.style.padding = '4px 8px'
-  preElement.onclick = () => {
-    navigator.clipboard.writeText(code)
-    showToast('代码已复制到剪贴板', 'success')
-  }
+  preElement.ondblclick = () => fn({ language: language || originLanguage, code })
   return preElement
 };
