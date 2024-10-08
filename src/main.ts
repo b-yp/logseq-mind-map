@@ -8,6 +8,7 @@ import App from "@/App.vue";
 import { useLogseqStore } from "@/stores";
 import messages from "@/lang/index";
 import "@/css/tailwind.css";
+import "@/assets/iconfont.js";
 
 const locale = localStorage.getItem("localeValue");
 const i18n = createI18n({

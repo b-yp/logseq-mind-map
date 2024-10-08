@@ -1,7 +1,7 @@
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 
-export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): MindMap.Data[] => {
-  const data: MindMap.Data[] = [];
+export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): IMindMap.Data[] => {
+  const data: IMindMap.Data[] = [];
   trees
     .filter((tree) => !!tree.content.trim())
     .forEach((tree) => {
@@ -15,8 +15,8 @@ export const getData = (trees: Array<BlockEntity>, currentGraph: AppGraphInfo): 
   return data.filter((item) => item.data.text);
 };
 
-const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<MindMap.PureData> => {
-  const data: Partial<MindMap.PureData> = {
+const getContent = (block: BlockEntity, currentGraph: AppGraphInfo): Partial<IMindMap.PureData> => {
+  const data: Partial<IMindMap.PureData> = {
     text: block.content.trim(),
     uid: block.uuid,
   }
