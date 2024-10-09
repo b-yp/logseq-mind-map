@@ -1,5 +1,5 @@
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
-import hljs, { Language } from 'highlight.js'
+import hljs from 'highlight.js'
 
 export const getData = (
   trees: Array<BlockEntity>,
