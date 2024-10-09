@@ -1,3 +1,4 @@
+import "@logseq/libs"
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 import hljs from 'highlight.js'
 
