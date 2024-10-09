@@ -24,8 +24,9 @@ const logseqStore = useLogseqStore();
 const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 const { setTrees } = logseqStore;
-const { page, trees, currentGraph } = storeToRefs(logseqStore);
 const { setMindMap, setData, setSearchInfo } = mindMapStore;
+const { setMainRef } = commonStore;
+const { page, trees, currentGraph } = storeToRefs(logseqStore);
 const { mindMap } = storeToRefs(mindMapStore);
 const { isDarkUI } = storeToRefs(commonStore);
 
@@ -39,6 +40,7 @@ const codeEditor = ref<{
   language: "",
   content: "",
 });
+const mainRef = ref<HTMLDivElement>();
 
 onMounted(() => {
   setTimeout(() => {
@@ -83,6 +85,10 @@ watch(mindMap, () => {
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
   mindMap.value.on("data_change", setData);
   mindMap.value.on("search_info_change", setSearchInfo);
+});
+
+watch(mainRef, (ref) => {
+  !!ref && setMainRef(ref);
 });
 
 const close = () => {
@@ -138,7 +144,7 @@ ${value}
 </script>
 
 <template>
-  <div id="main" :data-theme="isDarkUI ? 'dark' : 'light'">
+  <div id="main" :data-theme="isDarkUI ? 'dark' : 'light'" ref="mainRef">
     <div id="mindMapContainer"></div>
     <SettingMenu />
     <ToolBar />

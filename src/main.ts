@@ -15,6 +15,7 @@ import { useLogseqStore } from "@/stores";
 import messages from "@/lang/index";
 import "@/css/tailwind.css";
 import "@/assets/iconfont.js";
+import { showToast } from "./utils";
 
 const locale = localStorage.getItem("localeValue");
 const i18n = createI18n({
@@ -37,27 +38,27 @@ const { setPage, setTrees, setCurrentGraph } = logseqStore;
 
 // @ts-ignore
 self.MonacoEnvironment = {
-	getWorker: function (workerId, label) {
-		switch (label) {
-			case 'json':
-				return new jsonWorker();
-			case 'css':
-			case 'scss':
-			case 'less':
-				return new cssWorker();
-			case 'html':
-			case 'handlebars':
-			case 'razor':
-				return new htmlWorker();
-			case 'typescript':
-			case 'javascript':
-      case 'ts':
-      case 'js':
+  getWorker: function (workerId, label) {
+    switch (label) {
+      case "json":
+        return new jsonWorker();
+      case "css":
+      case "scss":
+      case "less":
+        return new cssWorker();
+      case "html":
+      case "handlebars":
+      case "razor":
+        return new htmlWorker();
+      case "typescript":
+      case "javascript":
+      case "ts":
+      case "js":
         return new tsWorker();
       default:
         return new editorWorker();
     }
-	}
+  },
 };
 
 if (import.meta.env.VITE_MODE === "web") {
@@ -101,25 +102,25 @@ function renderApp() {
   if (isMounted) return;
   app.mount("#root");
   isMounted = true;
-  renderMindMap();
-}
-
-async function renderMindMap() {
-  const page = await logseq.Editor.getCurrentPage();
-  const tree = page?.uuid
-    ? await logseq.Editor.getPageBlocksTree(page.uuid)
-    : [];
-  setPage(page);
-  setTrees(tree);
 }
 
 async function setData() {
-  const page = await logseq.Editor.getCurrentPage();
-  const tree = page?.uuid
-    ? await logseq.Editor.getPageBlocksTree(page.uuid)
-    : [];
-  const currentGraph = await logseq.App.getCurrentGraph();
-  setPage(page);
-  setTrees(tree);
-  setCurrentGraph(currentGraph);
+  try {
+    const page = await logseq.Editor.getCurrentPage();
+    const tree = page?.uuid
+      ? await logseq.Editor.getPageBlocksTree(page.uuid)
+      : [];
+    const currentGraph = await logseq.App.getCurrentGraph();
+    setPage(page);
+    setTrees(tree);
+    setCurrentGraph(currentGraph);
+  } catch (error: any) {
+    console.error("error ❌", error?.message);
+    if (
+      error.name === "TypeError" &&
+      error.message.includes("Failed to fetch")
+    ) {
+      showToast(`${error.name}: ${error.message}`, "error");
+    }
+  }
 }

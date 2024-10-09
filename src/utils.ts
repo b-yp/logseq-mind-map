@@ -1,6 +1,8 @@
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 import hljs from 'highlight.js'
 
+import { useCommonStore } from "@/stores";
+
 export const getData = (
   trees: Array<BlockEntity>,
   currentGraph: AppGraphInfo
@@ -54,9 +56,11 @@ const getContent = (
   return data;
 };
 
-export const showToast = (message: string, type: string) => {
+export const showToast = (message: string, type: string, duration: number = 3000) => {
   const isWeb = import.meta.env.VITE_MODE === "web";
   if (isWeb) {
+    const commonStore = useCommonStore();
+
     const toast = document.createElement("div");
     toast.className = "toast toast-top toast-end";
     const alert = document.createElement("div");
@@ -65,11 +69,11 @@ export const showToast = (message: string, type: string) => {
     span.textContent = message;
     alert.appendChild(span);
     toast.appendChild(alert);
-    document.body.appendChild(toast);
+    commonStore.mainRef?.appendChild(toast);
 
     setTimeout(() => {
-      document.body.removeChild(toast);
-    }, 3000);
+      commonStore.mainRef?.removeChild(toast);
+    }, duration);
   } else {
     logseq.UI.showMsg(message, type);
   }
