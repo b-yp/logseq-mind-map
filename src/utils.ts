@@ -93,9 +93,21 @@ export const highlightCode = (content: string, fn: ({ language, code }: { langua
   ).value
   const preElement = document.createElement('pre')
   const codeElement = document.createElement('code')
+  const spanElement = document.createElement('span')
   codeElement.innerHTML = highlightedCode
+  spanElement.textContent = originLanguage
   preElement.appendChild(codeElement)
+  preElement.appendChild(spanElement)
   preElement.style.padding = '4px 8px'
+  preElement.style.paddingTop = '1.5rem'
+  preElement.style.position = "relative"
+  spanElement.style.position = "absolute"
+  spanElement.style.right = "2px"
+  spanElement.style.top = "2px"
+  spanElement.style.borderRadius = "4px"
+  spanElement.style.padding = "2px 4px"
+  spanElement.style.fontSize = "12px"
+  spanElement.style.border = "1px solid #00d7c0"
   preElement.ondblclick = () => fn({ language: language || originLanguage, code })
   return preElement
 };
