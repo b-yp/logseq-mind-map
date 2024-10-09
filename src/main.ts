@@ -11,7 +11,7 @@ import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
 import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
 import App from "@/App.vue";
-import { useLogseqStore } from "@/stores";
+import { useLogseqStore, useCommonStore } from "@/stores";
 import messages from "@/lang/index";
 import "@/css/tailwind.css";
 import "@/assets/iconfont.js";
@@ -34,7 +34,9 @@ app.use(InstallCodeMirror);
 let isMounted = false;
 
 const logseqStore = useLogseqStore();
+const commonStore = useCommonStore();
 const { setPage, setTrees, setCurrentGraph } = logseqStore;
+const { setIsFetchFailed } = commonStore;
 
 // @ts-ignore
 self.MonacoEnvironment = {
@@ -114,12 +116,14 @@ async function setData() {
     setPage(page);
     setTrees(tree);
     setCurrentGraph(currentGraph);
+    setIsFetchFailed(false);
   } catch (error: any) {
     console.error("error ❌", error?.message);
     if (
       error.name === "TypeError" &&
       error.message.includes("Failed to fetch")
     ) {
+      setIsFetchFailed(true);
       showToast(`${error.name}: ${error.message}`, "error");
     }
   }

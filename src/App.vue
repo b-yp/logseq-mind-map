@@ -14,6 +14,7 @@ import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
+import Dialog from "@/components/Dialog.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
@@ -28,7 +29,7 @@ const { setMindMap, setData, setSearchInfo } = mindMapStore;
 const { setMainRef } = commonStore;
 const { page, trees, currentGraph } = storeToRefs(logseqStore);
 const { mindMap } = storeToRefs(mindMapStore);
-const { isDarkUI } = storeToRefs(commonStore);
+const { isDarkUI, isFetchFailed } = storeToRefs(commonStore);
 
 const activeNode = ref<any>(null);
 const codeEditor = ref<{
@@ -157,6 +158,15 @@ ${value}
       @close="codeEditor = { isOpen: false, language: '', content: '' }"
       @save="handleSave"
     />
+    <Dialog
+      :is-open="isFetchFailed"
+      title="请求错误，请打开 Logseq API Server!"
+    >
+      <p>1. 打开 Logseq</p>
+      <p>2. 打开设置</p>
+      <p>3. 打开 API Server</p>
+      <p>4. 重启 Logseq</p>
+    </Dialog>
   </div>
 </template>
 
