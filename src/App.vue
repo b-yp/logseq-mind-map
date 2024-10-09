@@ -71,7 +71,9 @@ watch([mindMap, page, trees, currentGraph], () => {
     children: getData(trees.value, currentGraph.value),
   });
 
-  setTimeout(mindMap.value.view.fit, 500);
+  setTimeout(() => {
+    mindMap.value?.view.fit(() => {}, false, 20);
+  }, 500);
 });
 
 watch(mindMap, () => {
@@ -100,7 +102,7 @@ const close = () => {
 
 const handleNodeTreeRenderEnd = () => {
   if (!mindMap.value) return;
-  mindMap.value.view.fit(() => {}, false, 20);
+  // mindMap.value.view.fit(() => {}, false, 20);
 };
 
 const handleNodeActive = (res: any) => {
