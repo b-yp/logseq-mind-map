@@ -3,6 +3,7 @@ import proxyLogseq from "logseq-proxy";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
+import { InstallCodeMirror } from "codemirror-editor-vue3";
 import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
 import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
@@ -27,12 +28,14 @@ const app = createApp(App);
 const pinia = createPinia();
 app.use(pinia);
 app.use(i18n);
+app.use(InstallCodeMirror);
 
 let isMounted = false;
 
 const logseqStore = useLogseqStore();
 const { setPage, setTrees, setCurrentGraph } = logseqStore;
 
+// @ts-ignore
 self.MonacoEnvironment = {
 	getWorker: function (workerId, label) {
 		switch (label) {
@@ -50,10 +53,10 @@ self.MonacoEnvironment = {
 			case 'javascript':
       case 'ts':
       case 'js':
-				return new tsWorker();
-			default:
-				return new editorWorker();
-		}
+        return new tsWorker();
+      default:
+        return new editorWorker();
+    }
 	}
 };
 

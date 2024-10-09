@@ -84,6 +84,11 @@ watch(mindMap, () => {
 });
 
 const close = () => {
+  if (codeEditor.value.isOpen) {
+    codeEditor.value.isOpen = false;
+    return;
+  }
+  if (import.meta.env.VITE_MODE === "web") return;
   logseq.hideMainUI();
   if (!mindMap.value) return;
   mindMap.value.off("node_tree_render_end", handleNodeTreeRenderEnd);
@@ -95,7 +100,7 @@ const close = () => {
 
 const handleNodeTreeRenderEnd = () => {
   if (!mindMap.value) return;
-  mindMap.value.view.fit(() => { }, false, 20);
+  mindMap.value.view.fit(() => {}, false, 20);
 };
 
 const handleNodeActive = (res: any) => {
@@ -117,15 +122,15 @@ const handleSave = async (value: string, language: string) => {
 ${value}
 \`\`\`
     `
-  )
+  );
 
   const tree = page.value?.uuid
     ? await logseq.Editor.getPageBlocksTree(page.value.uuid)
     : [];
-  
-  setTrees(tree)
 
-  codeEditor.value.isOpen = false
+  setTrees(tree);
+
+  codeEditor.value.isOpen = false;
   showToast("Update Success!", "success");
 };
 </script>
@@ -140,7 +145,7 @@ ${value}
       :is-open="codeEditor.isOpen"
       :value="codeEditor.content"
       :language="codeEditor.language"
-      :theme="isDarkUI ? 'vs-dark' : 'vs'"
+      :is-dark-u-i="isDarkUI"
       @close="codeEditor = { isOpen: false, language: '', content: '' }"
       @save="handleSave"
     />
