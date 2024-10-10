@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, watch, ref } from "vue";
+import { onMounted, watch, ref, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
@@ -64,6 +64,17 @@ onMounted(() => {
   hotkeys("esc", close);
 });
 
+onUnmounted(() => {
+  hotkeys.unbind("esc", close);
+  if (mindMap.value) {
+    mindMap.value.off("node_tree_render_end", handleNodeTreeRenderEnd);
+    mindMap.value.off("node_active", handleNodeActive);
+    mindMap.value.off("hide_text_edit", handleHideTextEdit);
+    mindMap.value.off("data_change", setData);
+    mindMap.value.off("search_info_change", setSearchInfo);
+  }
+})
+
 watch([mindMap, page, trees, currentGraph], () => {
   if (!mindMap.value || !currentGraph.value) return;
   mindMap.value.updateData({
@@ -99,12 +110,6 @@ const close = () => {
   }
   if (import.meta.env.VITE_MODE === "web") return;
   logseq.hideMainUI();
-  if (!mindMap.value) return;
-  mindMap.value.off("node_tree_render_end", handleNodeTreeRenderEnd);
-  mindMap.value.off("node_active", handleNodeActive);
-  mindMap.value.off("hide_text_edit", handleHideTextEdit);
-  mindMap.value.off("data_change", setData);
-  mindMap.value.off("search_info_change", setSearchInfo);
 };
 
 const handleNodeTreeRenderEnd = () => {
@@ -113,7 +118,7 @@ const handleNodeTreeRenderEnd = () => {
 };
 
 const handleNodeActive = (res: any) => {
-  activeNode.value = res;
+  !!res && (activeNode.value = res);
 };
 
 const handleHideTextEdit = () => {
