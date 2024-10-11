@@ -13,6 +13,8 @@ export default {
   menu: {
     language: 'Language',
     theme: 'Theme',
+    refresh: 'Refresh',
+    refreshDescription: 'Get the latest Logseq page data',
   },
   toolBar: {
     theme: 'Theme',

@@ -117,7 +117,7 @@ function renderApp() {
   isMounted = true;
 }
 
-async function setData() {
+export async function setData() {
   try {
     const page = await logseq.Editor.getCurrentPage();
     const tree = page?.uuid

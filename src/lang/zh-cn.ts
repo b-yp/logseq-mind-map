@@ -13,6 +13,8 @@ export default {
   menu: {
     language: '语言',
     theme: '主题',
+    refresh: '刷新',
+    refreshDescription: '获取最新 Logseq 页面数据',
   },
   toolBar: {
     theme: '主题',

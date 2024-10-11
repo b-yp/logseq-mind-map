@@ -1,6 +1,14 @@
 <template>
   <div class="fixed top-5 right-5 flex gap-4">
     <div
+      class="tooltip tooltip-bottom"
+      :data-tip="$t('menu.refreshDescription')"
+    >
+      <button class="btn btn-outline btn-info btn-xs" @click="handleRefresh">
+        {{ $t("menu.refresh") }}
+      </button>
+    </div>
+    <div
       class="lang-toggle tooltip tooltip-bottom"
       :data-tip="$t('menu.language')"
     >
@@ -35,6 +43,8 @@ import { useCommonStore, useMindMapStore } from "@/stores";
 import lang from "@/lang";
 import { storeToRefs } from "pinia";
 
+import { setData } from "@/main";
+
 const { locale } = useI18n();
 
 const mindMapStore = useMindMapStore();
@@ -64,4 +74,6 @@ const changeLang = (e: Event) => {
   locale.value = lang;
   localStorage.setItem("localeValue", locale.value);
 };
+
+const handleRefresh = setData;
 </script>
