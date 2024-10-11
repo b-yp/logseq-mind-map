@@ -1,6 +1,15 @@
 import { CONSTANTS } from "@/config/constant";
 
 export default {
+  webGuide: {
+    title: 'Request error, please open Logseq API Server!',
+    setting: {
+      1: 'Open Logseq settings, click “Features”, and open “HTTP APIs Server”',
+      2: 'Click the API icon, click “Authorization tokens”, add a token, the name can be anything, the value is “mind-map”',
+      3: 'Click “Server configurations”, set Host and Port, after setting click “Reset”',
+      4: 'Click “Start server”',
+    }
+  },
   menu: {
     language: 'Language',
     theme: 'Theme',

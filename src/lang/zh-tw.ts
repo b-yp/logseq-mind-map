@@ -1,6 +1,15 @@
 import { CONSTANTS } from "@/config/constant";
 
 export default {
+  webGuide: {
+    title: '請開啟 Logseq API Server!',
+    setting: {
+      1: '開啟 Logseq 設定，點擊 “更多功能”，開啟 “HTTP APIs Server”',
+      2: '點擊 API 圖示，點擊 “Authorization tokens”，新增一個 token，名稱隨便寫，值為 “mind-map”',
+      3: '點擊 “Server configurations”，設定 Host 和 Port，設定完點擊 “Reset”',
+      4: '點擊 “Start server”',
+    }
+  },
   menu: {
     language: '語言',
     theme: '主題',

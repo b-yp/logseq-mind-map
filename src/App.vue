@@ -165,12 +165,26 @@ ${value}
     />
     <Dialog
       :is-open="isFetchFailed"
-      title="请求错误，请打开 Logseq API Server!"
+      :title="$t('webGuide.title')"
     >
-      <p>1. 打开 Logseq</p>
-      <p>2. 打开设置</p>
-      <p>3. 打开 API Server</p>
-      <p>4. 重启 Logseq</p>
+      <ul class="mt-4">
+        <li class="mb-4">
+          <h3>1. {{ $t('webGuide.setting.1') }}</h3>
+          <img class="ml-4" src="./assets/images/screenshots/set-1.png" alt="1" />
+        </li>
+        <li class="mb-4">
+          <h3>2. {{ $t('webGuide.setting.2') }}</h3>
+          <img class="ml-4" src="./assets/images/screenshots/set-2.png" alt="2" />
+        </li>
+        <li class="mb-4">
+          <h3>3. {{ $t('webGuide.setting.3') }}</h3>
+          <img class="ml-4" src="./assets/images/screenshots/set-3.png" alt="3" />
+        </li>
+        <li class="mb-4">
+          <h3>4. {{ $t('webGuide.setting.4') }}</h3>
+          <img class="ml-4" src="./assets/images/screenshots/set-4.png" alt="4" />
+        </li>
+      </ul>
     </Dialog>
   </div>
 </template>
