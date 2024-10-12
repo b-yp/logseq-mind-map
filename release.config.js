@@ -1,7 +1,7 @@
 const pluginName = require('./package.json').name
 
 module.exports = {
-  branches: 'main',
+  branches: 'master',
   plugins: [
     '@semantic-release/commit-analyzer',
     '@semantic-release/release-notes-generator',
