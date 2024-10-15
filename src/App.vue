@@ -14,7 +14,7 @@ import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
-import Dialog from "@/components/Dialog.vue";
+import Guide from "@/components/Guide.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
@@ -29,7 +29,7 @@ const { setMindMap, setData, setSearchInfo } = mindMapStore;
 const { setMainRef } = commonStore;
 const { page, trees, currentGraph } = storeToRefs(logseqStore);
 const { mindMap } = storeToRefs(mindMapStore);
-const { isDarkUI, isFetchFailed } = storeToRefs(commonStore);
+const { isDarkUI } = storeToRefs(commonStore);
 
 const activeNode = ref<any>(null);
 const codeEditor = ref<{
@@ -163,29 +163,7 @@ ${value}
       @close="codeEditor = { isOpen: false, language: '', content: '' }"
       @save="handleSave"
     />
-    <Dialog
-      :is-open="isFetchFailed"
-      :title="$t('webGuide.title')"
-    >
-      <ul class="mt-4">
-        <li class="mb-4">
-          <h3>1. {{ $t('webGuide.setting.1') }}</h3>
-          <img class="ml-4" src="./assets/images/screenshots/set-1.png" alt="1" />
-        </li>
-        <li class="mb-4">
-          <h3>2. {{ $t('webGuide.setting.2') }}</h3>
-          <img class="ml-4" src="./assets/images/screenshots/set-2.png" alt="2" />
-        </li>
-        <li class="mb-4">
-          <h3>3. {{ $t('webGuide.setting.3') }}</h3>
-          <img class="ml-4" src="./assets/images/screenshots/set-3.png" alt="3" />
-        </li>
-        <li class="mb-4">
-          <h3>4. {{ $t('webGuide.setting.4') }}</h3>
-          <img class="ml-4" src="./assets/images/screenshots/set-4.png" alt="4" />
-        </li>
-      </ul>
-    </Dialog>
+    <Guide />
   </div>
 </template>
 
