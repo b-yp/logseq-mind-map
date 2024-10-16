@@ -7,6 +7,7 @@ import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 import Search from "simple-mind-map/src/plugins/Search.js";
 import Export from "simple-mind-map/src/plugins/Export.js";
 import ExportPDF from "simple-mind-map/src/plugins/ExportPDF.js";
+import { BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
 import { getData, showToast, highlightCode } from "@/utils";
@@ -42,6 +43,9 @@ const codeEditor = ref<{
   content: "",
 });
 const mainRef = ref<HTMLDivElement>();
+const lastNode = ref<any>(null);
+const syncNodeType = ref<"self" | "parent" | "brother" | "children">("self");
+const uidMap = ref<Record<string, string>>({});
 
 onMounted(() => {
   setTimeout(() => {
@@ -85,6 +89,7 @@ watch([mindMap, page, trees, currentGraph], () => {
     children: getData(trees.value, currentGraph.value),
   });
 
+  uidMap.value = {};
   setTimeout(() => {
     mindMap.value?.view.fit(() => {}, false, 20);
   }, 500);
@@ -97,6 +102,16 @@ watch(mindMap, () => {
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
   mindMap.value.on("data_change", setData);
   mindMap.value.on("search_info_change", setSearchInfo);
+
+  mindMap.value.keyCommand.addShortcut("Tab", () => {
+    lastNode.value = activeNode.value;
+    syncNodeType.value = "children";
+  });
+
+  mindMap.value.keyCommand.addShortcut("Enter", () => {
+    lastNode.value = activeNode.value;
+    syncNodeType.value = "brother";
+  });
 });
 
 watch(mainRef, (ref) => {
@@ -121,11 +136,45 @@ const handleNodeActive = (res: any) => {
   !!res && (activeNode.value = res);
 };
 
-const handleHideTextEdit = () => {
+const handleHideTextEdit = async () => {
   const data = activeNode.value?.getData();
-  logseq.Editor.updateBlock(data.uid, data.text).then(() => {
-    showToast("Update Success!", "success");
-  });
+  const lastNodeData = lastNode.value?.getData();
+  const currentUid =
+    lastNodeData && (uidMap.value[lastNodeData.uid] || lastNodeData.uid);
+
+  let res: BlockEntity | boolean | null = null;
+  switch (syncNodeType.value) {
+    case "self":
+      const selfRes = await logseq.Editor.updateBlock(data.uid, data.text);
+      res = true;
+      break;
+    case "children":
+      const childrenRes = await logseq.Editor.appendBlockInPage(
+        currentUid,
+        data.text
+      );
+      uidMap.value[data.uid] = childrenRes?.uuid || "";
+      res = childrenRes;
+      break;
+    case "brother":
+      const brotherRes = await logseq.Editor.insertBlock(
+        currentUid,
+        data.text,
+        {
+          sibling: true,
+        }
+      );
+      uidMap.value[data.uid] = brotherRes?.uuid || "";
+      res = brotherRes;
+      break;
+  }
+
+  if (res) {
+    showToast(`Update ${syncNodeType.value} Success!`, "success");
+  } else {
+    showToast(`Update ${syncNodeType.value} Failed!`, "error");
+  }
+  syncNodeType.value = "self";
 };
 
 const handleSave = async (value: string, language: string) => {
