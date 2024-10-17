@@ -2,6 +2,7 @@
 import { onMounted, watch, ref, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import hotkeys from "hotkeys-js";
+import classNames from "classnames";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
 import Search from "simple-mind-map/src/plugins/Search.js";
@@ -44,7 +45,12 @@ const codeEditor = ref<{
 });
 const mainRef = ref<HTMLDivElement>();
 const lastNode = ref<any>(null);
-const syncNodeType = ref<"self" | "parent" | "brother" | "children">("self");
+const syncNodeType = ref<"self" | "parent" | "sibling" | "children">("self");
+const rightClickType = ref<string>("");
+const currentNode = ref<any>(null);
+const menuLeft = ref<number>(0);
+const menuTop = ref<number>(0);
+const isShowMenu = ref<boolean>(false);
 const uidMap = ref<Record<string, string>>({});
 
 onMounted(() => {
@@ -76,8 +82,13 @@ onUnmounted(() => {
     mindMap.value.off("hide_text_edit", handleHideTextEdit);
     mindMap.value.off("data_change", setData);
     mindMap.value.off("search_info_change", setSearchInfo);
+    mindMap.value.off("node_contextmenu", handleNodeContextmenu);
+    mindMap.value.off("node_click", handleCloseMenu);
+    mindMap.value.off("draw_click", handleCloseMenu);
+    mindMap.value.off("expand_btn_click", handleCloseMenu);
+    mindMap.value.off("mousewheel", handleCloseMenu);
   }
-})
+});
 
 watch([mindMap, page, trees, currentGraph], () => {
   if (!mindMap.value || !currentGraph.value) return;
@@ -102,6 +113,12 @@ watch(mindMap, () => {
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
   mindMap.value.on("data_change", setData);
   mindMap.value.on("search_info_change", setSearchInfo);
+  mindMap.value.on("node_contextmenu", handleNodeContextmenu);
+  mindMap.value.on("node_click", handleCloseMenu);
+  mindMap.value.on("draw_click", handleCloseMenu);
+  mindMap.value.on("expand_btn_click", handleCloseMenu);
+  mindMap.value.on("mousewheel", handleCloseMenu);
+  mindMap.value.on("node_dblclick", handleCloseMenu);
 
   mindMap.value.keyCommand.addShortcut("Tab", () => {
     lastNode.value = activeNode.value;
@@ -110,8 +127,16 @@ watch(mindMap, () => {
 
   mindMap.value.keyCommand.addShortcut("Enter", () => {
     lastNode.value = activeNode.value;
-    syncNodeType.value = "brother";
+    syncNodeType.value = "sibling";
   });
+
+  // TODO: There is a bug in continuous deletion.
+  // @ts-ignore
+  mindMap.value.keyCommand.removeShortcut("Del");
+  mindMap.value.keyCommand.addShortcut("Del", handleRemoveNode);
+  // @ts-ignore
+  mindMap.value.keyCommand.removeShortcut("Shift+Backspace");
+  mindMap.value.keyCommand.addShortcut("Shift+Backspace", handleRemoveCurrentNode);
 });
 
 watch(mainRef, (ref) => {
@@ -133,7 +158,7 @@ const handleNodeTreeRenderEnd = () => {
 };
 
 const handleNodeActive = (res: any) => {
-  !!res && (activeNode.value = res);
+  res && (activeNode.value = res);
 };
 
 const handleHideTextEdit = async () => {
@@ -143,36 +168,39 @@ const handleHideTextEdit = async () => {
     lastNodeData && (uidMap.value[lastNodeData.uid] || lastNodeData.uid);
 
   let res: BlockEntity | boolean | null = null;
-  switch (syncNodeType.value) {
-    case "self":
-      const selfRes = await logseq.Editor.updateBlock(data.uid, data.text);
-      res = true;
-      break;
-    case "children":
-      const childrenRes = await logseq.Editor.appendBlockInPage(
-        currentUid,
-        data.text
-      );
-      uidMap.value[data.uid] = childrenRes?.uuid || "";
-      res = childrenRes;
-      break;
-    case "brother":
-      const brotherRes = await logseq.Editor.insertBlock(
-        currentUid,
-        data.text,
-        {
-          sibling: true,
-        }
-      );
-      uidMap.value[data.uid] = brotherRes?.uuid || "";
-      res = brotherRes;
-      break;
+  try {
+    switch (syncNodeType.value) {
+      case "self":
+        await logseq.Editor.updateBlock(data.uid, data.text);
+        res = true;
+        break;
+      case "children":
+        const childrenRes = await logseq.Editor.appendBlockInPage(
+          currentUid,
+          data.text
+        );
+        uidMap.value[data.uid] = childrenRes?.uuid || "";
+        res = childrenRes;
+        break;
+      case "sibling":
+        const siblingRes = await logseq.Editor.insertBlock(
+          currentUid,
+          data.text,
+          {
+            sibling: true,
+          }
+        );
+        uidMap.value[data.uid] = siblingRes?.uuid || "";
+        res = siblingRes;
+        break;
+    }
+  } catch (error) {
+    res = false;
+    showToast((error as Error).message, "error");
   }
 
   if (res) {
     showToast(`Update ${syncNodeType.value} Success!`, "success");
-  } else {
-    showToast(`Update ${syncNodeType.value} Failed!`, "error");
   }
   syncNodeType.value = "self";
 };
@@ -196,6 +224,70 @@ ${value}
   codeEditor.value.isOpen = false;
   showToast("Update Success!", "success");
 };
+
+const handleNodeContextmenu = (e, node) => {
+  rightClickType.value = "node";
+  menuLeft.value = e.clientX + 10;
+  menuTop.value = e.clientY + 10;
+  isShowMenu.value = true;
+  currentNode.value = node;
+};
+
+const handleCloseMenu = () => {
+  isShowMenu.value = false;
+  menuLeft.value = 0;
+  menuTop.value = 0;
+  rightClickType.value = "";
+};
+
+const handleInsertSiblingNode = () => {
+  mindMap.value?.execCommand("INSERT_NODE");
+  lastNode.value = activeNode.value;
+  syncNodeType.value = "sibling";
+};
+
+const handleInsertChildNode = () => {
+  mindMap.value?.execCommand("INSERT_CHILD_NODE");
+  lastNode.value = activeNode.value;
+  syncNodeType.value = "children";
+};
+
+const handleRemoveNode = () => {
+  mindMap.value?.execCommand("REMOVE_NODE");
+  const data = activeNode.value.getData();
+  logseq.Editor.removeBlock(data.uid)
+    .then(() => {
+      showToast("删除成功", "success");
+    })
+    .catch((error) => {
+      showToast("删除失败：" + error, "error");
+    })
+    .finally(handleCloseMenu);
+};
+
+const handleRemoveCurrentNode = async () => {
+  mindMap.value?.execCommand("REMOVE_CURRENT_NODE");
+  const data = activeNode.value.getData();
+  const block = await logseq.Editor.getBlock(data.uid);
+  const childrenUids =
+    block?.children?.map((child) => child[1] as string) || [];
+
+  for (const uid of childrenUids.reverse()) {
+    await logseq.Editor.moveBlock(uid, data.uid, {
+      before: false,
+      children: false,
+    });
+  }
+
+  logseq.Editor.removeBlock(data.uid)
+    .then(() => {
+      showToast("删除成功", "success");
+    })
+    .catch((error) => {
+      showToast("删除失败：" + error, "error");
+    })
+    .finally(handleCloseMenu);
+};
 </script>
 
 <template>
@@ -213,6 +305,44 @@ ${value}
       @save="handleSave"
     />
     <Guide />
+    <ul
+      ref="menuRef"
+      v-show="isShowMenu"
+      :class="classNames('menu bg-base-200 rounded-box fixed')"
+      :style="{ top: menuTop + 'px', left: menuLeft + 'px' }"
+    >
+      <li @click="handleInsertSiblingNode">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.insertSiblingNode") }}</span>
+          <kbd class="kbd kbd-sm">Enter</kbd>
+        </div>
+      </li>
+      <li @click="handleInsertChildNode">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.insertChildNode") }}</span>
+          <kbd class="kbd kbd-sm">Tab</kbd>
+        </div>
+      </li>
+      <div class="divider m-0" />
+      <li @click="handleRemoveNode">
+        <div class="w-full flex items-center justify-between">
+          <span class="text-error">{{ $t("rightMenu.deleteNode") }}</span>
+          <kbd class="kbd kbd-sm">Delete</kbd>
+        </div>
+      </li>
+      <li @click="handleRemoveCurrentNode">
+        <div class="w-full flex items-center justify-between">
+          <span class="text-error">{{
+            $t("rightMenu.deleteCurrentNode")
+          }}</span>
+          <div>
+            <kbd class="kbd kbd-sm">Shift</kbd>
+            <span>+</span>
+            <kbd class="kbd kbd-sm">Backspace</kbd>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
