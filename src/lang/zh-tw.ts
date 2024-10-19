@@ -16,6 +16,12 @@ export default {
     refresh: '刷新',
     refreshDescription: '獲取最新 Logseq 頁面數據',
   },
+  rightMenu: {
+    insertSiblingNode: '插入同級節點',
+    insertChildNode: '插入子級節點',
+    deleteNode: '刪除節點',
+    deleteCurrentNode: '僅刪除當前節點',
+  },
   toolBar: {
     theme: '主題',
     structure: '結構',

@@ -16,6 +16,12 @@ export default {
     refresh: 'Refresh',
     refreshDescription: 'Get the latest Logseq page data',
   },
+  rightMenu: {
+    insertSiblingNode: 'Insert Sibling Node',
+    insertChildNode: 'Insert Child Node',
+    deleteNode: 'Delete Node',
+    deleteCurrentNode: 'Delete Current Node',
+  },
   toolBar: {
     theme: 'Theme',
     structure: 'Structure',
