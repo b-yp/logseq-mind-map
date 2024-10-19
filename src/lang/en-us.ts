@@ -17,10 +17,15 @@ export default {
     refreshDescription: 'Get the latest Logseq page data',
   },
   rightMenu: {
+    /** node */
     insertSiblingNode: 'Insert Sibling Node',
     insertChildNode: 'Insert Child Node',
     deleteNode: 'Delete Node',
     deleteCurrentNode: 'Delete Current Node',
+    /** canvas */
+    backRootNode: 'Back to Root Node',
+    expandAll: 'Expand All',
+    collapseAll: 'Collapse All',
   },
   toolBar: {
     theme: 'Theme',

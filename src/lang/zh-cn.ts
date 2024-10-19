@@ -17,10 +17,15 @@ export default {
     refreshDescription: '获取最新 Logseq 页面数据',
   },
   rightMenu: {
+    /** node */
     insertSiblingNode: '插入同级节点',
     insertChildNode: '插入子级节点',
     deleteNode: '删除节点',
     deleteCurrentNode: '仅删除当前节点',
+    /** canvas */
+    backRootNode: '返回根节点',
+    expandAll: '展开所有节点',
+    collapseAll: '折叠所有节点',
   },
   toolBar: {
     theme: '主题',
