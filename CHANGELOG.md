@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/b-yp/logseq-mind-map/compare/v1.0.0...v1.1.0) (2024-10-19)
+
+
+### Features
+
+* add right-click menu for nodes ([2da02fd](https://github.com/b-yp/logseq-mind-map/commit/2da02fd4e999cb62abec4d57fbcfbbc207eedefc))
+* allows the addition of child and sibling nodes ([228e9ab](https://github.com/b-yp/logseq-mind-map/commit/228e9ab9f57493409979075ce44a12f155a2d8cf))
+
 # 1.0.0 (2024-10-12)
 
 
