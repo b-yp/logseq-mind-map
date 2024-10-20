@@ -17,6 +17,7 @@ import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import Guide from "@/components/Guide.vue";
+import Icon from "@/components/Icon.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
@@ -327,6 +328,10 @@ const handleExpandAll = () => {
 const handleCollapseAll = () => {
   mindMap.value?.execCommand("UNEXPAND_ALL")
 };
+
+const handleExpandToLevel = (level: number) => {
+  mindMap.value?.execCommand("UNEXPAND_TO_LEVEL", level)
+};
 </script>
 
 <template>
@@ -372,6 +377,7 @@ const handleCollapseAll = () => {
         </div>
       </li>
     </ul>
+
     <ul v-show="isShowMenu && rightClickType === 'canvas'" :class="classNames('menu bg-base-200 rounded-box fixed')"
       :style="{ top: menuTop + 'px', left: menuLeft + 'px' }">
       <li @click="handleBackToRootNode">
@@ -391,6 +397,21 @@ const handleCollapseAll = () => {
       <li @click="handleCollapseAll">
         <span>{{ $t("rightMenu.collapseAll") }}</span>
       </li>
+      <div class="dropdown dropdown-hover dropdown-right">
+        <li>
+          <div class="w-full flex items-center justify-between" tabindex="0">
+            <span>{{ $t("rightMenu.expandTo") }}</span>
+            <Icon name="right" class="text-gray-500" />
+          </div>
+          <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 -translate-x-4 shadow">
+            <li v-for="level in Array.from({ length: 6 }, (_, index) => index + 1)" :key="level" @click="handleExpandToLevel(level)">
+              <a>
+                {{ $t(`rightMenu.level${level}`) }}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </div>
     </ul>
   </div>
 </template>

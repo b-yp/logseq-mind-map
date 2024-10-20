@@ -26,6 +26,13 @@ export default {
     backRootNode: 'Back to Root Node',
     expandAll: 'Expand All',
     collapseAll: 'Collapse All',
+    expandTo: 'Expand To',
+    level1: 'Level 1',
+    level2: 'Level 2',
+    level3: 'Level 3',
+    level4: 'Level 4',
+    level5: 'Level 5',
+    level6: 'Level 6',
   },
   toolBar: {
     theme: 'Theme',

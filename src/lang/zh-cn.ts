@@ -26,6 +26,13 @@ export default {
     backRootNode: '返回根节点',
     expandAll: '展开所有节点',
     collapseAll: '折叠所有节点',
+    expandTo: '展开到',
+    level1: '一级主题',
+    level2: '二级主题',
+    level3: '三级主题',
+    level4: '四级主题',
+    level5: '五级主题',
+    level6: '六级主题',
   },
   toolBar: {
     theme: '主题',
