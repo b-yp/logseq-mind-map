@@ -1,3 +1,13 @@
+# [1.2.0](https://github.com/b-yp/logseq-mind-map/compare/v1.1.0...v1.2.0) (2024-10-20)
+
+
+### Features
+
+* add right-click menu to the canvas ([9e3bd21](https://github.com/b-yp/logseq-mind-map/commit/9e3bd2189917de75bed35beaac6c6e74e35af9b0))
+* added a menu for fitting to the canvas ([31f9d1f](https://github.com/b-yp/logseq-mind-map/commit/31f9d1f6783488051aa274c50999cdbeea53d415))
+* added the feature to expand to the corresponding level ([3a36817](https://github.com/b-yp/logseq-mind-map/commit/3a36817daa9fb422c345c7635916afad99822bcb))
+* added Zen mode ([4e46b42](https://github.com/b-yp/logseq-mind-map/commit/4e46b4297f341f279a751d632216d712b5437df0))
+
 # [1.1.0](https://github.com/b-yp/logseq-mind-map/compare/v1.0.0...v1.1.0) (2024-10-19)
 
 
