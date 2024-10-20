@@ -33,6 +33,7 @@ export default {
     level4: '四級主題',
     level5: '五級主題',
     level6: '六級主題',
+    fitCanvas: '適應畫布',
   },
   toolBar: {
     theme: '主題',

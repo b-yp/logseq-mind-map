@@ -33,6 +33,7 @@ export default {
     level4: 'Level 4',
     level5: 'Level 5',
     level6: 'Level 6',
+    fitCanvas: 'Fit Canvas',
   },
   toolBar: {
     theme: 'Theme',

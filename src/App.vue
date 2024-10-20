@@ -107,9 +107,7 @@ watch([mindMap, page, trees, currentGraph], () => {
   });
 
   uidMap.value = {};
-  setTimeout(() => {
-    mindMap.value?.view.fit(() => { }, false, 20);
-  }, 500);
+  setTimeout(handleFitCanvas, 500);
 });
 
 watch(mindMap, () => {
@@ -162,7 +160,7 @@ const close = () => {
 
 const handleNodeTreeRenderEnd = () => {
   if (!mindMap.value) return;
-  // mindMap.value.view.fit(() => {}, false, 20);
+  // handleFitCanvas();
 };
 
 const handleNodeActive = (res: any) => {
@@ -332,6 +330,10 @@ const handleCollapseAll = () => {
 const handleExpandToLevel = (level: number) => {
   mindMap.value?.execCommand("UNEXPAND_TO_LEVEL", level)
 };
+
+const handleFitCanvas = () => {
+  mindMap.value?.view.fit(() => { }, false, 20);
+};
 </script>
 
 <template>
@@ -412,6 +414,17 @@ const handleExpandToLevel = (level: number) => {
           </ul>
         </li>
       </div>
+      <div class="divider m-0"></div>
+      <li @click="handleFitCanvas">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.fitCanvas") }}</span>
+          <div>
+            <kbd class="kbd kbd-sm">Ctrl</kbd>
+            <span>+</span>
+            <kbd class="kbd kbd-sm">I</kbd>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
