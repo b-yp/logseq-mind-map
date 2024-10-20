@@ -56,6 +56,7 @@ const mouseDownX = ref<number>(0);
 const mouseDownY = ref<number>(0);
 const isMouseDown = ref<boolean>(false);
 const uidMap = ref<Record<string, string>>({});
+const isZenMode = ref<boolean>(false);
 
 onMounted(() => {
   setTimeout(() => {
@@ -334,14 +335,20 @@ const handleExpandToLevel = (level: number) => {
 const handleFitCanvas = () => {
   mindMap.value?.view.fit(() => { }, false, 20);
 };
+
+const handleZenMode = () => {
+  if (isZenMode.value) document.exitFullscreen();
+  else document.documentElement.requestFullscreen();
+  isZenMode.value = !isZenMode.value;
+};
 </script>
 
 <template>
   <div id="main" :data-theme="isDarkUI ? 'dark' : 'light'" ref="mainRef">
     <div id="mindMapContainer"></div>
-    <SettingMenu />
-    <ToolBar />
-    <ToolDrawer />
+    <SettingMenu v-show="!isZenMode" />
+    <ToolBar v-show="!isZenMode" />
+    <ToolDrawer v-show="!isZenMode" />
     <CodeEditor :is-open="codeEditor.isOpen" :value="codeEditor.content" :language="codeEditor.language"
       :is-dark-u-i="isDarkUI" @close="codeEditor = { isOpen: false, language: '', content: '' }" @save="handleSave" />
     <Guide />
@@ -423,6 +430,12 @@ const handleFitCanvas = () => {
             <span>+</span>
             <kbd class="kbd kbd-sm">I</kbd>
           </div>
+        </div>
+      </li>
+      <li @click="handleZenMode">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.zenMode") }}</span>
+          <Icon v-show="isZenMode" name="tick" class="text-gray-500" />
         </div>
       </li>
     </ul>

@@ -34,6 +34,7 @@ export default {
     level5: '五級主題',
     level6: '六級主題',
     fitCanvas: '適應畫布',
+    zenMode: '禪模式',
   },
   toolBar: {
     theme: '主題',

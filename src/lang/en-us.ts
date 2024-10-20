@@ -34,6 +34,7 @@ export default {
     level5: 'Level 5',
     level6: 'Level 6',
     fitCanvas: 'Fit Canvas',
+    zenMode: 'Zen Mode',
   },
   toolBar: {
     theme: 'Theme',
