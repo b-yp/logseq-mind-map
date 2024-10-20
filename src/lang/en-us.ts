@@ -17,10 +17,24 @@ export default {
     refreshDescription: 'Get the latest Logseq page data',
   },
   rightMenu: {
+    /** node */
     insertSiblingNode: 'Insert Sibling Node',
     insertChildNode: 'Insert Child Node',
     deleteNode: 'Delete Node',
     deleteCurrentNode: 'Delete Current Node',
+    /** canvas */
+    backRootNode: 'Back to Root Node',
+    expandAll: 'Expand All',
+    collapseAll: 'Collapse All',
+    expandTo: 'Expand To',
+    level1: 'Level 1',
+    level2: 'Level 2',
+    level3: 'Level 3',
+    level4: 'Level 4',
+    level5: 'Level 5',
+    level6: 'Level 6',
+    fitCanvas: 'Fit Canvas',
+    zenMode: 'Zen Mode',
   },
   toolBar: {
     theme: 'Theme',

@@ -17,6 +17,7 @@ import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import Guide from "@/components/Guide.vue";
+import Icon from "@/components/Icon.vue";
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
@@ -46,12 +47,16 @@ const codeEditor = ref<{
 const mainRef = ref<HTMLDivElement>();
 const lastNode = ref<any>(null);
 const syncNodeType = ref<"self" | "parent" | "sibling" | "children">("self");
-const rightClickType = ref<string>("");
+const rightClickType = ref<"node" | "canvas">("node");
 const currentNode = ref<any>(null);
 const menuLeft = ref<number>(0);
 const menuTop = ref<number>(0);
 const isShowMenu = ref<boolean>(false);
+const mouseDownX = ref<number>(0);
+const mouseDownY = ref<number>(0);
+const isMouseDown = ref<boolean>(false);
 const uidMap = ref<Record<string, string>>({});
+const isZenMode = ref<boolean>(false);
 
 onMounted(() => {
   setTimeout(() => {
@@ -87,6 +92,8 @@ onUnmounted(() => {
     mindMap.value.off("draw_click", handleCloseMenu);
     mindMap.value.off("expand_btn_click", handleCloseMenu);
     mindMap.value.off("mousewheel", handleCloseMenu);
+    mindMap.value.off("svg_mousedown", handleSvgMouseDown);
+    mindMap.value.off("mouseup", handleMouseUp);
   }
 });
 
@@ -101,9 +108,7 @@ watch([mindMap, page, trees, currentGraph], () => {
   });
 
   uidMap.value = {};
-  setTimeout(() => {
-    mindMap.value?.view.fit(() => {}, false, 20);
-  }, 500);
+  setTimeout(handleFitCanvas, 500);
 });
 
 watch(mindMap, () => {
@@ -119,6 +124,8 @@ watch(mindMap, () => {
   mindMap.value.on("expand_btn_click", handleCloseMenu);
   mindMap.value.on("mousewheel", handleCloseMenu);
   mindMap.value.on("node_dblclick", handleCloseMenu);
+  mindMap.value.on("svg_mousedown", handleSvgMouseDown);
+  mindMap.value.on("mouseup", handleMouseUp);
 
   mindMap.value.keyCommand.addShortcut("Tab", () => {
     lastNode.value = activeNode.value;
@@ -154,7 +161,7 @@ const close = () => {
 
 const handleNodeTreeRenderEnd = () => {
   if (!mindMap.value) return;
-  // mindMap.value.view.fit(() => {}, false, 20);
+  // handleFitCanvas();
 };
 
 const handleNodeActive = (res: any) => {
@@ -237,7 +244,6 @@ const handleCloseMenu = () => {
   isShowMenu.value = false;
   menuLeft.value = 0;
   menuTop.value = 0;
-  rightClickType.value = "";
 };
 
 const handleInsertSiblingNode = () => {
@@ -288,29 +294,66 @@ const handleRemoveCurrentNode = async () => {
     })
     .finally(handleCloseMenu);
 };
+
+const handleSvgMouseDown = (e) => {
+  if (e.which !== 3) return;
+  mouseDownX.value = e.clientX;
+  mouseDownY.value = e.clientY;
+  isMouseDown.value = true;
+};
+
+const handleMouseUp = (e) => {
+  if (!isMouseDown.value) return isMouseDown.value = false;
+
+  if (
+    Math.abs(mouseDownX.value - e.clientX) > 3 ||
+    Math.abs(mouseDownY.value - e.clientY) > 3
+  ) return handleCloseMenu();
+
+  rightClickType.value = "canvas";
+  isShowMenu.value = true;
+  menuLeft.value = e.clientX + 10;
+  menuTop.value = e.clientY + 10;
+};
+
+const handleBackToRootNode = () => {
+  mindMap.value?.renderer.setRootNodeCenter()
+};
+
+const handleExpandAll = () => {
+  mindMap.value?.execCommand("EXPAND_ALL")
+};
+
+const handleCollapseAll = () => {
+  mindMap.value?.execCommand("UNEXPAND_ALL")
+};
+
+const handleExpandToLevel = (level: number) => {
+  mindMap.value?.execCommand("UNEXPAND_TO_LEVEL", level)
+};
+
+const handleFitCanvas = () => {
+  mindMap.value?.view.fit(() => { }, false, 20);
+};
+
+const handleZenMode = () => {
+  if (isZenMode.value) document.exitFullscreen();
+  else document.documentElement.requestFullscreen();
+  isZenMode.value = !isZenMode.value;
+};
 </script>
 
 <template>
   <div id="main" :data-theme="isDarkUI ? 'dark' : 'light'" ref="mainRef">
     <div id="mindMapContainer"></div>
-    <SettingMenu />
-    <ToolBar />
-    <ToolDrawer />
-    <CodeEditor
-      :is-open="codeEditor.isOpen"
-      :value="codeEditor.content"
-      :language="codeEditor.language"
-      :is-dark-u-i="isDarkUI"
-      @close="codeEditor = { isOpen: false, language: '', content: '' }"
-      @save="handleSave"
-    />
+    <SettingMenu v-show="!isZenMode" />
+    <ToolBar v-show="!isZenMode" />
+    <ToolDrawer v-show="!isZenMode" />
+    <CodeEditor :is-open="codeEditor.isOpen" :value="codeEditor.content" :language="codeEditor.language"
+      :is-dark-u-i="isDarkUI" @close="codeEditor = { isOpen: false, language: '', content: '' }" @save="handleSave" />
     <Guide />
-    <ul
-      ref="menuRef"
-      v-show="isShowMenu"
-      :class="classNames('menu bg-base-200 rounded-box fixed')"
-      :style="{ top: menuTop + 'px', left: menuLeft + 'px' }"
-    >
+    <ul v-show="isShowMenu && rightClickType === 'node'" :class="classNames('menu bg-base-200 rounded-box fixed')"
+      :style="{ top: menuTop + 'px', left: menuLeft + 'px' }">
       <li @click="handleInsertSiblingNode">
         <div class="w-full flex items-center justify-between">
           <span>{{ $t("rightMenu.insertSiblingNode") }}</span>
@@ -323,7 +366,7 @@ const handleRemoveCurrentNode = async () => {
           <kbd class="kbd kbd-sm">Tab</kbd>
         </div>
       </li>
-      <div class="divider m-0" />
+      <div class="divider m-0"></div>
       <li @click="handleRemoveNode">
         <div class="w-full flex items-center justify-between">
           <span class="text-error">{{ $t("rightMenu.deleteNode") }}</span>
@@ -340,6 +383,59 @@ const handleRemoveCurrentNode = async () => {
             <span>+</span>
             <kbd class="kbd kbd-sm">Backspace</kbd>
           </div>
+        </div>
+      </li>
+    </ul>
+
+    <ul v-show="isShowMenu && rightClickType === 'canvas'" :class="classNames('menu bg-base-200 rounded-box fixed')"
+      :style="{ top: menuTop + 'px', left: menuLeft + 'px' }">
+      <li @click="handleBackToRootNode">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.backRootNode") }}</span>
+          <div>
+            <kbd class="kbd kbd-sm">Ctrl</kbd>
+            <span>+</span>
+            <kbd class="kbd kbd-sm">Enter</kbd>
+          </div>
+        </div>
+      </li>
+      <div class="divider m-0"></div>
+      <li @click="handleExpandAll">
+        <span>{{ $t("rightMenu.expandAll") }}</span>
+      </li>
+      <li @click="handleCollapseAll">
+        <span>{{ $t("rightMenu.collapseAll") }}</span>
+      </li>
+      <div class="dropdown dropdown-hover dropdown-right">
+        <li>
+          <div class="w-full flex items-center justify-between" tabindex="0">
+            <span>{{ $t("rightMenu.expandTo") }}</span>
+            <Icon name="right" class="text-gray-500" />
+          </div>
+          <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 -translate-x-4 shadow">
+            <li v-for="level in Array.from({ length: 6 }, (_, index) => index + 1)" :key="level" @click="handleExpandToLevel(level)">
+              <a>
+                {{ $t(`rightMenu.level${level}`) }}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </div>
+      <div class="divider m-0"></div>
+      <li @click="handleFitCanvas">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.fitCanvas") }}</span>
+          <div>
+            <kbd class="kbd kbd-sm">Ctrl</kbd>
+            <span>+</span>
+            <kbd class="kbd kbd-sm">I</kbd>
+          </div>
+        </div>
+      </li>
+      <li @click="handleZenMode">
+        <div class="w-full flex items-center justify-between">
+          <span>{{ $t("rightMenu.zenMode") }}</span>
+          <Icon v-show="isZenMode" name="tick" class="text-gray-500" />
         </div>
       </li>
     </ul>

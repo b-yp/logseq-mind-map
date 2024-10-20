@@ -17,10 +17,24 @@ export default {
     refreshDescription: '獲取最新 Logseq 頁面數據',
   },
   rightMenu: {
+    /** node */
     insertSiblingNode: '插入同級節點',
     insertChildNode: '插入子級節點',
     deleteNode: '刪除節點',
     deleteCurrentNode: '僅刪除當前節點',
+    /** canvas */
+    backRootNode: '返回根節點',
+    expandAll: '展開所有節點',
+    collapseAll: '折叠所有节点',
+    expandTo: '展開到',
+    level1: '一級主題',
+    level2: '二級主題',
+    level3: '三級主題',
+    level4: '四級主題',
+    level5: '五級主題',
+    level6: '六級主題',
+    fitCanvas: '適應畫布',
+    zenMode: '禪模式',
   },
   toolBar: {
     theme: '主題',
