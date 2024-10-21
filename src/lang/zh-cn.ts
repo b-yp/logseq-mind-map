@@ -20,6 +20,8 @@ export default {
     /** node */
     insertSiblingNode: '插入同级节点',
     insertChildNode: '插入子级节点',
+    collapseAllSiblingNode: '折叠所有同级节点',
+    collapseOtherSiblingNode: '折叠其他同级节点',
     deleteNode: '删除节点',
     deleteCurrentNode: '仅删除当前节点',
     /** canvas */
