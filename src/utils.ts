@@ -1,6 +1,6 @@
-import "@logseq/libs"
+import "@logseq/libs";
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
-import hljs from 'highlight.js'
+import hljs from "highlight.js";
 
 import { useCommonStore } from "@/stores";
 
@@ -57,7 +57,11 @@ const getContent = (
   return data;
 };
 
-export const showToast = (message: string, type: string, duration: number = 3000) => {
+export const showToast = (
+  message: string,
+  type: string,
+  duration: number = 3000
+) => {
   const isWeb = import.meta.env.VITE_MODE === "web";
   if (isWeb) {
     const commonStore = useCommonStore();
@@ -80,7 +84,10 @@ export const showToast = (message: string, type: string, duration: number = 3000
   }
 };
 
-export const highlightCode = (content: string, fn: ({ language, code }: { language: string, code: string }) => void) => {
+export const highlightCode = (
+  content: string,
+  fn: ({ language, code }: { language: string; code: string }) => void
+) => {
   const codeBlockRegex = /```(.*?)\n([\s\S]*?)```/g;
   let originLanguage;
   let code;
@@ -90,29 +97,49 @@ export const highlightCode = (content: string, fn: ({ language, code }: { langua
     originLanguage = match[1].trim();
     code = match[2].trim();
   }
-  if (!code) return null
-  const language = hljs.getLanguage(originLanguage)?.name?.split(',')[0]
-  const highlightedCode = hljs.highlight(
-    code,
-    { language: language || 'plaintext' }
-  ).value
-  const preElement = document.createElement('pre')
-  const codeElement = document.createElement('code')
-  const spanElement = document.createElement('span')
-  codeElement.innerHTML = highlightedCode
-  spanElement.textContent = originLanguage
-  preElement.appendChild(codeElement)
-  preElement.appendChild(spanElement)
-  preElement.style.padding = '4px 8px'
-  preElement.style.paddingTop = '1.5rem'
-  preElement.style.position = "relative"
-  spanElement.style.position = "absolute"
-  spanElement.style.right = "2px"
-  spanElement.style.top = "2px"
-  spanElement.style.borderRadius = "4px"
-  spanElement.style.padding = "2px 4px"
-  spanElement.style.fontSize = "12px"
-  spanElement.style.border = "1px solid #00d7c0"
-  preElement.ondblclick = () => fn({ language: language || originLanguage, code })
-  return preElement
+  if (!code) return null;
+  const language = hljs.getLanguage(originLanguage)?.name?.split(",")[0];
+  const highlightedCode = hljs.highlight(code, {
+    language: language || "plaintext",
+  }).value;
+  const preElement = document.createElement("pre");
+  const codeElement = document.createElement("code");
+  const spanElement = document.createElement("span");
+  codeElement.innerHTML = highlightedCode;
+  spanElement.textContent = originLanguage;
+  preElement.appendChild(codeElement);
+  preElement.appendChild(spanElement);
+  preElement.style.padding = "4px 8px";
+  preElement.style.paddingTop = "1.5rem";
+  preElement.style.position = "relative";
+  spanElement.style.position = "absolute";
+  spanElement.style.right = "2px";
+  spanElement.style.top = "2px";
+  spanElement.style.borderRadius = "4px";
+  spanElement.style.padding = "2px 4px";
+  spanElement.style.fontSize = "12px";
+  spanElement.style.border = "1px solid #00d7c0";
+  preElement.ondblclick = () =>
+    fn({ language: language || originLanguage, code });
+  return preElement;
+};
+
+export const getNodesAtLevel = (tree: IMindMap.Data[], level: number): IMindMap.Data['data'][] => {
+  const result: IMindMap.Data['data'][] = [];
+
+  function traverse(node: IMindMap.Data[], currentLevel: number) {
+    if (currentLevel === level) {
+      result.push(...node.map((item) => item.data));
+      return;
+    }
+
+    if (currentLevel < level) {
+      for (const child of node) {
+        traverse(child.children, currentLevel + 1);
+      }
+    }
+  }
+
+  traverse(tree, 1);
+  return result;
 };

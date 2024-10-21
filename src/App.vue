@@ -11,7 +11,7 @@ import ExportPDF from "simple-mind-map/src/plugins/ExportPDF.js";
 import { BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 
 import { useLogseqStore, useMindMapStore, useCommonStore } from "@/stores";
-import { getData, showToast, highlightCode } from "@/utils";
+import { getData, showToast, highlightCode, getNodesAtLevel } from "@/utils";
 import SettingMenu from "@/components/SettingMenu.vue";
 import ToolBar from "@/components/ToolBar.vue";
 import ToolDrawer from "@/components/ToolDrawer.vue";
@@ -99,12 +99,13 @@ onUnmounted(() => {
 
 watch([mindMap, page, trees, currentGraph], () => {
   if (!mindMap.value || !currentGraph.value) return;
+  const nodes = getData(trees.value, currentGraph.value);
   mindMap.value.updateData({
     data: {
       text: page.value?.name,
       uid: page.value?.id,
     },
-    children: getData(trees.value, currentGraph.value),
+    children: nodes,
   });
 
   uidMap.value = {};
@@ -341,6 +342,19 @@ const handleZenMode = () => {
   else document.documentElement.requestFullscreen();
   isZenMode.value = !isZenMode.value;
 };
+
+const handleCollapseAllSiblingNode = (isIncludeCurrentNode: boolean = true) => {
+  const node = activeNode.value;
+  if (!node) return;
+  if (node.opt.layerIndex <= 6) return handleExpandToLevel(node.opt.layerIndex);
+  const data = getData(trees.value, currentGraph.value!);
+  const nodes = getNodesAtLevel(data, node.opt.layerIndex);
+  const uids = isIncludeCurrentNode ? nodes.map(i => i.uid) : nodes.map(i => i.uid).filter(i => i !== node.uid);
+  uids.forEach((uid) => {
+    mindMap.value?.execCommand("UNEXPAND_ALL", false, uid);
+  });
+  isShowMenu.value = false;
+};
 </script>
 
 <template>
@@ -365,6 +379,13 @@ const handleZenMode = () => {
           <span>{{ $t("rightMenu.insertChildNode") }}</span>
           <kbd class="kbd kbd-sm">Tab</kbd>
         </div>
+      </li>
+      <div class="divider m-0"></div>
+      <li @click="handleCollapseAllSiblingNode(true)">
+        <span>{{ $t("rightMenu.collapseAllSiblingNode") }}</span>
+      </li>
+      <li @click="handleCollapseAllSiblingNode(false)">
+        <span>{{ $t("rightMenu.collapseOtherSiblingNode") }}</span>
       </li>
       <div class="divider m-0"></div>
       <li @click="handleRemoveNode">
@@ -413,7 +434,8 @@ const handleZenMode = () => {
             <Icon name="right" class="text-gray-500" />
           </div>
           <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-40 p-2 -translate-x-4 shadow">
-            <li v-for="level in Array.from({ length: 6 }, (_, index) => index + 1)" :key="level" @click="handleExpandToLevel(level)">
+            <li v-for="level in Array.from({ length: 6 }, (_, index) => index + 1)" :key="level"
+              @click="handleExpandToLevel(level)">
               <a>
                 {{ $t(`rightMenu.level${level}`) }}
               </a>
