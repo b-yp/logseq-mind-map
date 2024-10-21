@@ -22,6 +22,7 @@ export default {
     insertChildNode: 'Insert Child Node',
     collapseAllSiblingNode: 'Collapse All Sibling Nodes',
     collapseOtherSiblingNode: 'Collapse Other Sibling Nodes',
+    collapseOtherParentNode: 'Collapse Other Parent Nodes',
     deleteNode: 'Delete Node',
     deleteCurrentNode: 'Delete Current Node',
     /** canvas */
