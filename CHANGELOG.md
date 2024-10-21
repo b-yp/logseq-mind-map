@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/b-yp/logseq-mind-map/compare/v1.3.0...v1.4.0) (2024-10-21)
+
+
+### Features
+
+* added the feature to collapse other parent nodes ([7e9a76c](https://github.com/b-yp/logseq-mind-map/commit/7e9a76c849542d625a6c56bc710a1ac6dddb7e66))
+
 # [1.3.0](https://github.com/b-yp/logseq-mind-map/compare/v1.2.0...v1.3.0) (2024-10-21)
 
 
