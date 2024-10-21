@@ -22,6 +22,7 @@ export default {
     insertChildNode: '插入子級節點',
     collapseAllSiblingNode: '折叠所有同级节点',
     collapseOtherSiblingNode: '折叠其他同级节点',
+    collapseOtherParentNode: '折叠其他父级节点',
     deleteNode: '刪除節點',
     deleteCurrentNode: '僅刪除當前節點',
     /** canvas */

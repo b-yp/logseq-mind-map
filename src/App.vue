@@ -355,6 +355,21 @@ const handleCollapseAllSiblingNode = (isIncludeCurrentNode: boolean = true) => {
   });
   isShowMenu.value = false;
 };
+
+const handleCollapseOtherTopNode = () => {
+  const node = activeNode.value;
+  const getTopNodeUid = (node: any) => {
+    if (node.opt.layerIndex === 1) return node.uid;
+    return getTopNodeUid(node.parent);
+  }
+  const topNodeUid = getTopNodeUid(node);
+  if (!topNodeUid) return;
+  mindMap.value?.execCommand("UNEXPAND_ALL", false);
+  // TODO: If it's an asynchronous task, a timer needs to be added.
+  mindMap.value?.renderer.expandToNodeUid(node.uid, () => {
+    mindMap.value?.execCommand("EXPAND_ALL", node.uid);
+  });
+};
 </script>
 
 <template>
@@ -386,6 +401,9 @@ const handleCollapseAllSiblingNode = (isIncludeCurrentNode: boolean = true) => {
       </li>
       <li @click="handleCollapseAllSiblingNode(false)">
         <span>{{ $t("rightMenu.collapseOtherSiblingNode") }}</span>
+      </li>
+      <li @click="handleCollapseOtherTopNode">
+        <span>{{ $t("rightMenu.collapseOtherTopNode") }}</span>
       </li>
       <div class="divider m-0"></div>
       <li @click="handleRemoveNode">
