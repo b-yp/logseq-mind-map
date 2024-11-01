@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/b-yp/logseq-mind-map/compare/v1.4.0...v1.5.0) (2024-11-01)
+
+
+### Features
+
+* supports modifying the background image and background color ([b2d01c5](https://github.com/b-yp/logseq-mind-map/commit/b2d01c57d9e001b35aead1fda5137d6c0065dfd0))
+
 # [1.4.0](https://github.com/b-yp/logseq-mind-map/compare/v1.3.0...v1.4.0) (2024-10-21)
 
 
