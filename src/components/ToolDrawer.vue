@@ -1,5 +1,6 @@
 <template>
   <Drawer :title="$t(`toolBar.${currentDrawer}`)" :isOpen="isDrawerOpen" @close="onClose">
+    <Style v-if="currentDrawer === 'style'" />
     <Theme v-if="currentDrawer === 'theme'" />
     <Structure v-if="currentDrawer === 'structure'" />
     <Outline v-if="currentDrawer === 'outline'" :data="outlineData" />
@@ -14,6 +15,7 @@ import { storeToRefs } from "pinia";
 import { useCommonStore, useMindMapStore } from "@/stores";
 
 import Drawer from "./Drawer.vue";
+import Style from "./Style.vue";
 import Theme from "./Theme.vue";
 import Structure from "./Structure.vue";
 import Outline from "./Outline.vue";

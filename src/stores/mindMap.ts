@@ -20,6 +20,8 @@ const useMindMapStore = defineStore("mindMap", () => {
   const activeNode = ref<any>(null);
   const lastNode = ref<any>(null);
   const isZenMode = ref<boolean>(false);
+  const backgroundColor = ref<string>("");
+  const backgroundImage = ref<string>("");
 
   const setMindMap = (mind: MindMap) => (mindMap.value = mind);
   const setTheme = (currentTheme: string) => (theme.value = currentTheme);
@@ -30,6 +32,8 @@ const useMindMapStore = defineStore("mindMap", () => {
   const setActiveNode = (node: any) => (activeNode.value = node);
   const setLastNode = (node: any) => (lastNode.value = node);
   const setIsZenMode = (isZen: boolean) => (isZenMode.value = isZen);
+  const setBackgroundColor = (color: string) => (backgroundColor.value = color);
+  const setBackgroundImage = (image: string) => (backgroundImage.value = image);
 
   const handleExpandToLevel = (level: number) => {
     mindMap.value?.execCommand("UNEXPAND_TO_LEVEL", level);
@@ -82,6 +86,8 @@ const useMindMapStore = defineStore("mindMap", () => {
     activeNode,
     lastNode,
     isZenMode,
+    backgroundColor,
+    backgroundImage,
     setMindMap,
     setTheme,
     setLayout,
@@ -90,6 +96,8 @@ const useMindMapStore = defineStore("mindMap", () => {
     setActiveNode,
     setLastNode,
     setIsZenMode,
+    setBackgroundColor,
+    setBackgroundImage,
     handleExpandToLevel,
     handleFitCanvas,
     handleRemoveCurrentNode,
