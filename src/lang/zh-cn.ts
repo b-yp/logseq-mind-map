@@ -39,7 +39,13 @@ export default {
     fitCanvas: '适应画布',
     zenMode: '禅模式',
   },
+  style: {
+    background: '背景',
+    color: '颜色',
+    image: '图片',
+  },
   toolBar: {
+    style: '样式',
     theme: '主题',
     structure: '结构',
     outline: '大纲',
@@ -82,5 +88,8 @@ export default {
       title: 'PDF',
       description: '适合打印',
     },
-  }
-}
+  },
+  imageUploader: {
+    upload: '点击上传图片',
+  },
+};

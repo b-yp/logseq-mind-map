@@ -25,6 +25,15 @@ const { isDrawerOpen, currentDrawer } = storeToRefs(commonStore);
 
 const toolBarData = [
   {
+    key: "style",
+    icon: "style",
+    title: "toolBar.style",
+    onclick: () => {
+      setIsDrawerOpen(true);
+      setCurrentDrawer("style");
+    },
+  },
+  {
     key: "theme",
     icon: "theme",
     title: "toolBar.theme",
