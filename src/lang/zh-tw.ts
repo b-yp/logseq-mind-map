@@ -51,6 +51,13 @@ export default {
     background: "背景",
     color: "顏色",
     image: "圖片",
+    line: "線條",
+    width: "粗細",
+    style: "風格",
+    straight: "直線",
+    curve: "曲線",
+    direct: "直連",
+    showArrow: "顯示箭頭",
   },
   theme: {
     classics: "經典",

@@ -51,6 +51,13 @@ export default {
     background: "Background",
     color: "Color",
     image: "Image",
+    line: "Line",
+    width: "Width",
+    style: "Style",
+    straight: "Straight",
+    curve: "Curve",
+    direct: "Direct",
+    showArrow: "Show Arrow",
   },
   theme: {
     classics: "Classics",

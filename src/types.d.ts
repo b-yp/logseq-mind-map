@@ -41,4 +41,15 @@ declare namespace IMindMap {
     currentIndex: number;
     total: number;
   }
+
+  type LineStyle = "straight" | "curve" | "direct";
+
+  interface ThemeConfig {
+    backgroundColor?: string;
+    backgroundImage?: string;
+    lineColor?: string;
+    lineWidth?: number;
+    lineStyle?: LineStyle;
+    showLineMarker?: boolean;
+  }
 }
