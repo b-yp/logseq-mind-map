@@ -43,6 +43,13 @@ export default {
     background: '背景',
     color: '颜色',
     image: '图片',
+    line: '线条',
+    width: '粗细',
+    style: '风格',
+    straight: '直线',
+    curve: '曲线',
+    direct: '直连',
+    showArrow: '显示箭头',
   },
   toolBar: {
     style: '样式',
