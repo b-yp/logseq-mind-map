@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/b-yp/logseq-mind-map/compare/v1.5.0...v1.6.0) (2024-11-05)
+
+
+### Features
+
+* supports modifying the line style ([600ff6a](https://github.com/b-yp/logseq-mind-map/commit/600ff6a669f8a50148f0472ff3bde6aba928a4f1))
+
 # [1.5.0](https://github.com/b-yp/logseq-mind-map/compare/v1.4.0...v1.5.0) (2024-11-01)
 
 
