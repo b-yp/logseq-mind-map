@@ -99,4 +99,12 @@ export default {
   imageUploader: {
     upload: "點擊上傳圖片",
   },
+  dialog: {
+    theme: {
+      title: "提示",
+      content: "你當前自定義過基礎樣式，是否覆蓋？",
+      confirm: "覆蓋",
+      cancel: "保留",
+    },
+  },
 };

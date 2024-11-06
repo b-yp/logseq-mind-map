@@ -17,6 +17,9 @@ import ToolDrawer from "@/components/ToolDrawer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import Guide from "@/components/Guide.vue";
 import RightMenu from "./components/RightMenu.vue";
+import { useI18n } from "vue-i18n";
+
+const { locale } = useI18n();
 
 MindMap.usePlugin(NodeImgAdjust);
 MindMap.usePlugin(Search);
@@ -47,8 +50,9 @@ const {
   setRightClickType,
 } = commonStore;
 const { page, trees, currentGraph } = storeToRefs(logseqStore);
-const { mindMap, activeNode, lastNode, isZenMode } = storeToRefs(mindMapStore);
-const { isDarkUI, syncNodeType } = storeToRefs(commonStore);
+const { mindMap, activeNode, lastNode, isZenMode, themeConfig, theme, layout } =
+  storeToRefs(mindMapStore);
+const { isDarkUI, syncNodeType, lang } = storeToRefs(commonStore);
 
 const codeEditor = ref<{
   isOpen: boolean;
@@ -66,6 +70,7 @@ const isMouseDown = ref<boolean>(false);
 const uidMap = ref<Record<string, string>>({});
 
 onMounted(() => {
+  locale.value = lang.value;
   setTimeout(() => {
     const mindMapContainer = document.getElementById("mindMapContainer")!;
     const mind = new MindMap({
@@ -107,6 +112,9 @@ onUnmounted(() => {
 watch([mindMap, page, trees, currentGraph], () => {
   if (!mindMap.value || !currentGraph.value) return;
   const nodes = getData(trees.value, currentGraph.value);
+  mindMap.value.setThemeConfig(themeConfig.value);
+  mindMap.value.setLayout(layout.value);
+  mindMap.value.setTheme(theme.value);
   mindMap.value.updateData({
     data: {
       text: page.value?.name,
