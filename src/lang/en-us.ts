@@ -99,4 +99,12 @@ export default {
   imageUploader: {
     upload: "Click to upload image",
   },
+  dialog: {
+    theme: {
+      title: "Notice",
+      content: "You have customized the basic style, whether to override?",
+      confirm: "Override",
+      cancel: "Keep",
+    },
+  },
 };

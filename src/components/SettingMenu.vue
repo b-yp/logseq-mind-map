@@ -51,7 +51,7 @@ const mindMapStore = useMindMapStore();
 const commonStore = useCommonStore();
 
 const { setTheme } = mindMapStore;
-const { setIsDarkUI } = commonStore;
+const { setIsDarkUI, setLang } = commonStore;
 const { isDarkUI, isDrawerOpen } = storeToRefs(commonStore);
 const { mindMap } = storeToRefs(mindMapStore);
 
@@ -72,7 +72,7 @@ const toggleTheme = () => {
 const changeLang = (e: Event) => {
   const lang = (e.target as HTMLSelectElement).value;
   locale.value = lang;
-  localStorage.setItem("localeValue", locale.value);
+  setLang(lang);
 };
 
 const handleRefresh = setData;

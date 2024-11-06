@@ -42,6 +42,16 @@ declare namespace IMindMap {
     total: number;
   }
 
+  type RightClickType = "node" | "canvas";
+  type SyncNodeType = "self" | "parent" | "sibling" | "children";
+  type DrawerType =
+    | "style"
+    | "theme"
+    | "structure"
+    | "outline"
+    | "search"
+    | "export";
+
   type LineStyle = "straight" | "curve" | "direct";
 
   interface ThemeConfig {

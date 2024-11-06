@@ -2,6 +2,7 @@ import "@logseq/libs";
 import proxyLogseq from "logseq-proxy";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createI18n } from "vue-i18n";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
 import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
@@ -17,16 +18,17 @@ import "@/css/tailwind.css";
 import "@/assets/iconfont.js";
 import { showToast } from "./utils";
 
-const locale = localStorage.getItem("localeValue");
 const i18n = createI18n({
   legacy: false,
-  locale: locale || "English",
+  locale: "English",
   fallbackLocale: "简体中文",
   messages,
 });
 
 const app = createApp(App);
 const pinia = createPinia();
+// TODO: This section needs optimization as it causes performance issues, resulting in slow color selection.
+pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(i18n);
 app.use(InstallCodeMirror);
@@ -91,8 +93,8 @@ if (import.meta.env.VITE_MODE === "web") {
       },
     });
 
-    logseq.App.registerUIItem('pagebar', {
-      key: 'logseq-mark-map',
+    logseq.App.registerUIItem("pagebar", {
+      key: "logseq-mark-map",
       template: `
         <a class="button" data-on-click="show" title="Open mindmap mode">
           <svg t="1728493069636" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8028" width="20" height="20">
@@ -106,7 +108,7 @@ if (import.meta.env.VITE_MODE === "web") {
           </svg>
         </a>
       `,
-    })
+    });
   });
 }
 
