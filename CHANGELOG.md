@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/b-yp/logseq-mind-map/compare/v1.6.0...v1.7.0) (2024-11-06)
+
+
+### Features
+
+* persist data ([aa7ff7c](https://github.com/b-yp/logseq-mind-map/commit/aa7ff7cd2753ed7df3a72cae19f1c6fcbf910a3d))
+
 # [1.6.0](https://github.com/b-yp/logseq-mind-map/compare/v1.5.0...v1.6.0) (2024-11-05)
 
 
