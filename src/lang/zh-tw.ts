@@ -46,6 +46,7 @@ export default {
     outline: "大綱",
     search: "搜索",
     export: "匯出",
+    setting: "設置",
   },
   style: {
     background: "背景",
@@ -106,5 +107,8 @@ export default {
       confirm: "覆蓋",
       cancel: "保留",
     },
+  },
+  setting: {
+    save: "儲存",
   },
 };

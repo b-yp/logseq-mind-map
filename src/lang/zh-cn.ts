@@ -58,6 +58,7 @@ export default {
     outline: '大纲',
     search: '搜索',
     export: '导出',
+    setting: '设置',
   },
   theme: {
     classics: '经典',
@@ -106,5 +107,8 @@ export default {
       confirm: '覆盖',
       cancel: '保留',
     },
+  },
+  setting: {
+    save: '保存',
   },
 };

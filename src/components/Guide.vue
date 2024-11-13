@@ -1,5 +1,10 @@
 <template>
-  <Dialog :is-open="isFetchFailed" :title="$t('webGuide.title')">
+  <Dialog
+    :is-open="isShowGuide"
+    :title="$t('webGuide.title')"
+    @close="handleClose"
+  >
+    >
     <ul class="mt-4">
       <li class="mb-4">
         <h3>1. {{ $t("webGuide.setting.1") }}</h3>
@@ -28,5 +33,8 @@ import { useCommonStore } from "@/stores";
 import Dialog from "./Dialog.vue";
 
 const commonStore = useCommonStore();
-const { isFetchFailed } = storeToRefs(commonStore);
+const { isShowGuide } = storeToRefs(commonStore);
+const { setIsShowGuide } = commonStore;
+
+const handleClose = () => setIsShowGuide(false);
 </script>

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, watch, ref, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
+import proxyLogseq from "logseq-proxy";
 import hotkeys from "hotkeys-js";
 import MindMap from "simple-mind-map";
 import NodeImgAdjust from "simple-mind-map/src/plugins/NodeImgAdjust.js";
@@ -17,7 +19,7 @@ import ToolDrawer from "@/components/ToolDrawer.vue";
 import CodeEditor from "@/components/CodeEditor.vue";
 import Guide from "@/components/Guide.vue";
 import RightMenu from "./components/RightMenu.vue";
-import { useI18n } from "vue-i18n";
+import { setData as setDataMain } from "@/main";
 
 const { locale } = useI18n();
 
@@ -49,10 +51,11 @@ const {
   setIsShowMenu,
   setRightClickType,
 } = commonStore;
-const { page, trees, currentGraph } = storeToRefs(logseqStore);
+const { page, trees, currentGraph, logseqHost, logseqToken } =
+  storeToRefs(logseqStore);
 const { mindMap, activeNode, lastNode, isZenMode, themeConfig, theme, layout } =
   storeToRefs(mindMapStore);
-const { isDarkUI, syncNodeType, lang } = storeToRefs(commonStore);
+const { isDarkUI, syncNodeType, lang, isWeb } = storeToRefs(commonStore);
 
 const codeEditor = ref<{
   isOpen: boolean;
@@ -167,6 +170,18 @@ watch(mindMap, () => {
 
 watch(mainRef, (ref) => {
   !!ref && setMainRef(ref);
+});
+
+watch([logseqHost, logseqToken, isWeb], () => {
+  if (!isWeb.value) return;
+  proxyLogseq({
+    config: {
+      apiServer: logseqHost.value,
+      apiToken: logseqToken.value,
+    },
+    settings: window.mockSettings,
+  });
+  setDataMain();
 });
 
 const close = () => {

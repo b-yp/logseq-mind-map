@@ -1,12 +1,17 @@
 <template>
   <div>
-    <input type="checkbox" :checked="isOpen" id="modal" class="modal-toggle" />
+    <input
+      :checked="props.isOpen"
+      type="checkbox"
+      id="modal"
+      class="modal-toggle"
+    />
     <div class="modal" role="dialog">
       <div class="modal-box">
         <form method="dialog">
           <button
             class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            @click="isOpen = false"
+            @click="handleClose"
           >
             ✕
           </button>
@@ -24,16 +29,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-
 const props = defineProps<{
   title: string;
   isOpen: boolean;
 }>();
+const emit = defineEmits(["close"]);
 
-const isOpen = ref(props.isOpen);
-
-watch(props, () => {
-  isOpen.value = props.isOpen;
-});
+const handleClose = () => emit("close");
 </script>
