@@ -1,3 +1,11 @@
+# [1.8.0](https://github.com/b-yp/logseq-mind-map/compare/v1.7.0...v1.8.0) (2024-11-13)
+
+
+### Features
+
+* the web version supports a custom Logseq Server API ([bd82961](https://github.com/b-yp/logseq-mind-map/commit/bd829616cbd710744731cf041fc33859ec849b4f))
+* update the theme button ([bcf2efd](https://github.com/b-yp/logseq-mind-map/commit/bcf2efd1abaa185e5417a25221b6fd5bcf9015b4))
+
 # [1.7.0](https://github.com/b-yp/logseq-mind-map/compare/v1.6.0...v1.7.0) (2024-11-06)
 
 
