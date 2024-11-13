@@ -46,6 +46,7 @@ export default {
     outline: "Outline",
     search: "Search",
     export: "Export",
+    setting: "Setting",
   },
   style: {
     background: "Background",
@@ -106,5 +107,8 @@ export default {
       confirm: "Override",
       cancel: "Keep",
     },
+  },
+  setting: {
+    save: "Save",
   },
 };

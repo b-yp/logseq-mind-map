@@ -50,7 +50,8 @@ declare namespace IMindMap {
     | "structure"
     | "outline"
     | "search"
-    | "export";
+    | "export"
+    | "setting";
 
   type LineStyle = "straight" | "curve" | "direct";
 

@@ -15,6 +15,8 @@ const useCommonStore = defineStore(
     const menuLeft = ref<number>(0);
     const menuTop = ref<number>(0);
     const lang = ref<string>("English");
+    const isWeb = ref(false);
+    const isShowGuide = ref(false);
 
     const setIsDrawerOpen = (isOpen: boolean) => (isDrawerOpen.value = isOpen);
     const setIsDarkUI = (isDark: boolean) => {
@@ -33,6 +35,8 @@ const useCommonStore = defineStore(
     const setMenuLeft = (left: number) => (menuLeft.value = left);
     const setMenuTop = (top: number) => (menuTop.value = top);
     const setLang = (value: string) => (lang.value = value);
+    const setIsWeb = (value: boolean) => (isWeb.value = value);
+    const setIsShowGuide = (value: boolean) => (isShowGuide.value = value);
 
     const handleCloseMenu = () => {
       isShowMenu.value = false;
@@ -52,6 +56,8 @@ const useCommonStore = defineStore(
       isShowMenu,
       syncNodeType,
       lang,
+      isWeb,
+      isShowGuide,
       setIsDrawerOpen,
       setIsDarkUI,
       setCurrentDrawer,
@@ -63,6 +69,8 @@ const useCommonStore = defineStore(
       setIsShowMenu,
       setSyncNodeType,
       setLang,
+      setIsWeb,
+      setIsShowGuide,
       handleCloseMenu,
     };
   },

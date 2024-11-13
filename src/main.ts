@@ -1,7 +1,7 @@
 import "@logseq/libs";
 import proxyLogseq from "logseq-proxy";
 import { createApp } from "vue";
-import { createPinia } from "pinia";
+import { createPinia, storeToRefs } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createI18n } from "vue-i18n";
 import { InstallCodeMirror } from "codemirror-editor-vue3";
@@ -37,8 +37,9 @@ let isMounted = false;
 
 const logseqStore = useLogseqStore();
 const commonStore = useCommonStore();
-const { setPage, setTrees, setCurrentGraph } = logseqStore;
-const { setIsFetchFailed } = commonStore;
+const { setPage, setTrees, setCurrentGraph, setLogseqHost, setLogseqToken } = logseqStore;
+const { setIsFetchFailed, setIsWeb, setIsShowGuide } = commonStore;
+const { logseqHost, logseqToken } = storeToRefs(logseqStore);
 
 // @ts-ignore
 self.MonacoEnvironment = {
@@ -66,25 +67,31 @@ self.MonacoEnvironment = {
 };
 
 if (import.meta.env.VITE_MODE === "web") {
+  const host = logseqHost.value || import.meta.env.VITE_LOGSEQ_API_SERVER;
+  const token = logseqToken.value || import.meta.env.VITE_LOGSEQ_API_TOKEN;
   // run in browser
   console.log(
     "[faiz:] === meta.env.VITE_LOGSEQ_API_SERVER",
-    import.meta.env.VITE_LOGSEQ_API_SERVER
+    host,
   );
   console.log(
     `%c[version]: v${__APP_VERSION__}`,
     "background-color: #60A5FA; color: white; padding: 4px;"
   );
+  setIsWeb(true);
   proxyLogseq({
     config: {
-      apiServer: import.meta.env.VITE_LOGSEQ_API_SERVER,
-      apiToken: import.meta.env.VITE_LOGSEQ_API_TOKEN,
+      apiServer: host,
+      apiToken: token,
     },
     settings: window.mockSettings,
   });
+  setLogseqHost(host);
+  setLogseqToken(token);
   renderApp();
 } else {
   console.log("=== logseq-mind-map loaded ===");
+  setIsWeb(false);
   logseq.ready(() => {
     logseq.provideModel({
       show() {
@@ -130,6 +137,7 @@ export async function setData() {
     setTrees(tree);
     setCurrentGraph(currentGraph);
     setIsFetchFailed(false);
+    setIsShowGuide(false);
   } catch (error: any) {
     console.error("error ❌", error?.message);
     if (
@@ -137,6 +145,7 @@ export async function setData() {
       error.message.includes("Failed to fetch")
     ) {
       setIsFetchFailed(true);
+      setIsShowGuide(true);
       showToast(`${error.name}: ${error.message}`, "error");
     }
   }
