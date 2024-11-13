@@ -119,6 +119,7 @@ export const highlightCode = (
   spanElement.style.padding = "2px 4px";
   spanElement.style.fontSize = "12px";
   spanElement.style.border = "1px solid #00d7c0";
+  spanElement.style.display = originLanguage ? "block" : "none";
   preElement.ondblclick = () =>
     fn({ language: language || originLanguage, code });
   return preElement;
