@@ -34,7 +34,11 @@ const getContent = (
     const propertiesKeys = Object.keys(block.propertiesTextValues);
     const contentArray = data.text!.split("\n");
     const pureContentArray = contentArray.filter((item) => {
-      return !propertiesKeys.some((key) => item.trim().startsWith(`${key}::`));
+      return !propertiesKeys.some((key) => {
+        const kebabKey = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+        const trimmedItem = item.trim();
+        return trimmedItem.startsWith(`${kebabKey}::`);
+      });
     });
     data.text = pureContentArray.join("\n");
   }

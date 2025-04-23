@@ -6,6 +6,7 @@
     "id": "logseq-mind-map",
     "icon": "logo.png"
   },
+  "type": "module",
   "scripts": {
     "dev": "vite --mode web",
     "build:plugin": "tsc && vite build --mode plugin",
