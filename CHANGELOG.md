@@ -1,3 +1,11 @@
+## [1.8.1](https://github.com/b-yp/logseq-mind-map/compare/v1.8.0...v1.8.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* fixed build failure ([4c47ca2](https://github.com/b-yp/logseq-mind-map/commit/4c47ca22a8707b6d8ccd49eae0c881433387a0e0))
+* kebab-case attribute filtering ([eb88c64](https://github.com/b-yp/logseq-mind-map/commit/eb88c64f2e78c0198995df576ceee9eca8464ee9))
+
 # [1.8.0](https://github.com/b-yp/logseq-mind-map/compare/v1.7.0...v1.8.0) (2024-11-13)
 
 
