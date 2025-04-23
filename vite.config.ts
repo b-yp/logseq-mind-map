@@ -21,6 +21,8 @@ export default defineConfig(async ({ command, mode }) => {
     base: "./",
     build: {
       target: "esnext",
+      outDir: "dist",
+      emptyOutDir: true,
     },
     define: {
       mockSettings: getMockSettings(mode === "web"),
