@@ -41,6 +41,7 @@ const {
   handleFitCanvas,
   handleRemoveCurrentNode,
   handleRemoveNode,
+  setIsLoading,
 } = mindMapStore;
 const {
   setMainRef,
@@ -53,7 +54,7 @@ const {
 } = commonStore;
 const { page, trees, currentGraph, logseqHost, logseqToken } =
   storeToRefs(logseqStore);
-const { mindMap, activeNode, lastNode, isZenMode, themeConfig, theme, layout } =
+const { mindMap, activeNode, lastNode, isZenMode, isLoading, themeConfig, theme, layout } =
   storeToRefs(mindMapStore);
 const { isDarkUI, syncNodeType, lang, isWeb } = storeToRefs(commonStore);
 
@@ -112,22 +113,37 @@ onUnmounted(() => {
   }
 });
 
-watch([mindMap, page, trees, currentGraph], () => {
+watch([mindMap, page, trees, currentGraph], async () => {
   if (!mindMap.value || !currentGraph.value) return;
-  const nodes = getData(trees.value, currentGraph.value);
-  mindMap.value.setThemeConfig(themeConfig.value);
-  mindMap.value.setLayout(layout.value);
-  mindMap.value.setTheme(theme.value);
-  mindMap.value.updateData({
-    data: {
-      text: page.value?.name,
-      uid: page.value?.id,
-    },
-    children: nodes,
-  });
 
-  uidMap.value = {};
-  setTimeout(handleFitCanvas, 500);
+  try {
+    // 显示加载状态
+    setIsLoading(true);
+    
+    // 等待数据加载完成
+    const nodes = await getData(trees.value, currentGraph.value);
+    
+    // 更新思维导图
+    mindMap.value.setThemeConfig(themeConfig.value);
+    mindMap.value.setLayout(layout.value);
+    mindMap.value.setTheme(theme.value);
+    mindMap.value.updateData({
+      data: {
+        text: page.value?.name,
+        uid: page.value?.id,
+      },
+      children: nodes,
+    });
+    
+    uidMap.value = {};
+    setTimeout(handleFitCanvas, 500);
+  } catch (error) {
+    console.error('Failed to load mind map data:', error);
+    // 显示错误信息
+  } finally {
+    // 无论成功还是失败，都隐藏加载状态
+    setIsLoading(false);
+  }
 });
 
 watch(mindMap, () => {
@@ -299,6 +315,10 @@ const handleMouseUp = (e) => {
 
 <template>
   <div id="main" :data-theme="isDarkUI ? 'dark' : 'light'" ref="mainRef">
+    <span
+      v-show="isLoading"
+      class="loading loading-spinner loading-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50px]"
+    ></span>
     <div id="mindMapContainer"></div>
     <SettingMenu v-show="!isZenMode" />
     <ToolBar v-show="!isZenMode" />

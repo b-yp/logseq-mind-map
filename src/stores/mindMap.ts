@@ -22,6 +22,7 @@ const useMindMapStore = defineStore(
     const activeNode = ref<any>(null);
     const lastNode = ref<any>(null);
     const isZenMode = ref<boolean>(false);
+    const isLoading = ref<boolean>(false);
     const themeConfig = ref<IMindMap.ThemeConfig>({
       backgroundColor: "#ffffff",
       backgroundImage: "",
@@ -40,6 +41,7 @@ const useMindMapStore = defineStore(
     const setActiveNode = (node: any) => (activeNode.value = node);
     const setLastNode = (node: any) => (lastNode.value = node);
     const setIsZenMode = (isZen: boolean) => (isZenMode.value = isZen);
+    const setIsLoading = (isLoad: boolean) => (isLoading.value = isLoad);
     const setThemeConfig = (config: IMindMap.ThemeConfig) =>
       (themeConfig.value = config);
 
@@ -94,6 +96,7 @@ const useMindMapStore = defineStore(
       activeNode,
       lastNode,
       isZenMode,
+      isLoading,
       themeConfig,
       setMindMap,
       setTheme,
@@ -103,6 +106,7 @@ const useMindMapStore = defineStore(
       setActiveNode,
       setLastNode,
       setIsZenMode,
+      setIsLoading,
       setThemeConfig,
       handleExpandToLevel,
       handleFitCanvas,

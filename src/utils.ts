@@ -4,28 +4,52 @@ import hljs from "highlight.js";
 
 import { useCommonStore } from "@/stores";
 
-export const getData = (
+// 添加一个辅助函数来获取图片尺寸
+const getImageDimensions = (url: string): Promise<{ width: number, height: number }> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({
+        width: img.width,
+        height: img.height
+      });
+    };
+    img.onerror = () => {
+      // 加载失败时使用默认尺寸
+      resolve({
+        width: 100,
+        height: 100
+      });
+    };
+    img.src = url;
+  });
+};
+
+export const getData = async (
   trees: Array<BlockEntity>,
   currentGraph: AppGraphInfo
-): IMindMap.Data[] => {
+): Promise<IMindMap.Data[]> => {
   const data: IMindMap.Data[] = [];
-  trees
+
+  // 使用 Promise.all 处理所有节点
+  await Promise.all(trees
     .filter((tree) => !!tree.content.trim())
-    .forEach((tree) => {
+    .map(async (tree) => {
       data.push({
-        data: getContent(tree, currentGraph),
+        data: await getContent(tree, currentGraph),
         children: !!tree.children?.length
-          ? getData(tree.children as BlockEntity[], currentGraph)
+          ? await getData(tree.children as BlockEntity[], currentGraph)
           : [],
       });
-    });
+    }));
+
   return data.filter((item) => item.data.text);
 };
 
-const getContent = (
+const getContent = async (
   block: BlockEntity,
   currentGraph: AppGraphInfo
-): Partial<IMindMap.PureData> => {
+): Promise<Partial<IMindMap.PureData>> => {
   const data: Partial<IMindMap.PureData> = {
     text: block.content.trim(),
     uid: block.uuid,
@@ -42,22 +66,65 @@ const getContent = (
     });
     data.text = pureContentArray.join("\n");
   }
-  const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
+
+  const imageRegex = /!\[(.*?)\]\((.*?)\)(\{:height (\d+), :width (\d+)\})?/g;
   let match;
   while ((match = imageRegex.exec(data.text!)) !== null) {
     const alt = match[1];
-    const relativeUrl = match[2];
-    const absoluteUrl = currentGraph?.path + relativeUrl.slice(2);
+    const url = match[2];
+    const hasSize = !!match[3];
+
+    // 判断是否为在线图片URL
+    const isOnlineImage = url.startsWith('http://') || url.startsWith('https://');
+    const imageUrl = isOnlineImage ? url : currentGraph?.path + url.slice(2);
+
+    // 获取图片实际尺寸
+    let actualWidth = 100;
+    let actualHeight = 100;
+    let aspectRatio = 1; // 宽高比
+
+    try {
+      const dimensions = await getImageDimensions(imageUrl);
+      actualWidth = dimensions.width;
+      actualHeight = dimensions.height;
+      aspectRatio = actualWidth / actualHeight;
+    } catch (error) {
+      console.error('Failed to get image dimensions:', error);
+    }
+
+    // 设置最终尺寸
+    let finalWidth, finalHeight;
+
+    if (hasSize) {
+      // 如果有设置宽高，使用设置的宽度，并根据比例计算高度
+      finalWidth = parseInt(match[5], 10);
+      finalHeight = Math.round(finalWidth / aspectRatio);
+    } else {
+      // 如果没有设置宽高，使用实际尺寸
+      finalWidth = actualWidth;
+      finalHeight = actualHeight;
+    }
+
+    // 设置最大宽度限制
+    const MAX_WIDTH = 800;
+
+    // 在计算最终尺寸时添加限制
+    if (!hasSize && finalWidth > MAX_WIDTH) {
+      finalWidth = MAX_WIDTH;
+      finalHeight = Math.round(MAX_WIDTH / aspectRatio);
+    }
 
     data.richText = true;
-    data.image = absoluteUrl;
+    data.image = imageUrl;
     data.imageTitle = alt;
     data.imageSize = {
-      width: 100,
-      height: 100,
-      custom: false,
+      width: finalWidth,
+      height: finalHeight,
+      custom: true,
     };
+    // data.text = ' ';
   }
+
   return data;
 };
 
