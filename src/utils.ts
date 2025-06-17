@@ -46,11 +46,16 @@ const getContent = (
   let match;
   while ((match = imageRegex.exec(data.text!)) !== null) {
     const alt = match[1];
-    const relativeUrl = match[2];
-    const absoluteUrl = currentGraph?.path + relativeUrl.slice(2);
+    const url = match[2];
+
+    // 判断是否为在线图片URL
+    const isOnlineImage = url.startsWith('http://') || url.startsWith('https://');
+
+    // 如果是在线图片，直接使用URL；否则按照原来的方式处理本地图片
+    const imageUrl = isOnlineImage ? url : currentGraph?.path + url.slice(2);
 
     data.richText = true;
-    data.image = absoluteUrl;
+    data.image = imageUrl;
     data.imageTitle = alt;
     data.imageSize = {
       width: 100,
