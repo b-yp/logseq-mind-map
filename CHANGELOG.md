@@ -1,3 +1,11 @@
+# [1.9.0](https://github.com/b-yp/logseq-mind-map/compare/v1.8.1...v1.9.0) (2025-06-17)
+
+
+### Features
+
+* display according to the image's own size instead of using the default value ([41c3ce2](https://github.com/b-yp/logseq-mind-map/commit/41c3ce2b972dff10b0cc0e380fe7ea78694d5f6d))
+* support online image display ([9ed125e](https://github.com/b-yp/logseq-mind-map/commit/9ed125e799d71c91b639427b9d5db9af66de91ad))
+
 ## [1.8.1](https://github.com/b-yp/logseq-mind-map/compare/v1.8.0...v1.8.1) (2025-04-23)
 
 
