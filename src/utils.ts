@@ -2,7 +2,7 @@ import "@logseq/libs";
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 import hljs from "highlight.js";
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 
 import { useCommonStore } from "@/stores";
 
@@ -294,7 +294,7 @@ const renderMarkdown = (text: string): string => {
     const html = marked(text);
 
     // 使用 DOMPurify 清理 HTML，防止 XSS 攻击
-    return DOMPurify.sanitize(html as string, DOMPURIFY_CONFIG);
+    return DOMPurify.default.sanitize(html as string, DOMPURIFY_CONFIG);
   } catch (error) {
     console.error('Markdown rendering error:', error);
     return `<p style="color: #ff6b6b; font-style: italic;">Markdown 渲染失败: ${error instanceof Error ? error.message : '未知错误'}</p>`;
