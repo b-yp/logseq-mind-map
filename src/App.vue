@@ -73,6 +73,18 @@ const mouseDownY = ref<number>(0);
 const isMouseDown = ref<boolean>(false);
 const uidMap = ref<Record<string, string>>({});
 
+// 更新所有 markdown 内容的颜色
+const updateMarkdownColors = (textColor: string) => {
+  // 限制查询范围到思维导图容器内
+  const mindMapContainer = document.getElementById('mindMapContainer');
+  if (!mindMapContainer) return;
+  
+  const markdownContainers = mindMapContainer.querySelectorAll('.markdown-content');
+  markdownContainers.forEach((container) => {
+    (container as HTMLElement).style.color = textColor;
+  });
+};
+
 onMounted(() => {
   locale.value = lang.value;
   setTimeout(() => {
@@ -81,8 +93,16 @@ onMounted(() => {
       el: mindMapContainer,
       isUseCustomNodeContent: true,
       customCreateNodeContent: (node) => {
-        codeEditor.value.content = node.nodeData.data.text;
-        return highlightCode(node.nodeData.data.text, ({ language, code }) => {
+        const nodeData = node.nodeData.data;
+        codeEditor.value.content = nodeData.text;
+        
+        // 如果节点有自定义内容（Markdown 渲染后的内容），优先使用
+        if (nodeData.customNodeContent) {
+          return nodeData.customNodeContent;
+        }
+        
+        // 否则检查是否有代码块需要高亮
+        return highlightCode(nodeData.text, ({ language, code }) => {
           codeEditor.value.isOpen = true;
           codeEditor.value.language = language;
           codeEditor.value.content = code;
@@ -113,20 +133,34 @@ onUnmounted(() => {
   }
 });
 
-watch([mindMap, page, trees, currentGraph], async () => {
+// 数据更新函数
+const updateMindMapData = async () => {
   if (!mindMap.value || !currentGraph.value) return;
 
   try {
     // 显示加载状态
     setIsLoading(true);
     
-    // 等待数据加载完成
-    const nodes = await getData(trees.value, currentGraph.value);
-    
-    // 更新思维导图
+    // 先设置主题相关配置
     mindMap.value.setThemeConfig(themeConfig.value);
     mindMap.value.setLayout(layout.value);
     mindMap.value.setTheme(theme.value);
+    
+    // 使用 requestAnimationFrame 确保主题应用完成
+    await new Promise(resolve => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(resolve);
+      });
+    });
+    
+    // 获取文本颜色
+    const secondTheme = mindMap.value.getThemeConfig('second');
+    const textColor = secondTheme?.color;
+    
+    // 等待数据加载完成
+    const nodes = await getData(trees.value, currentGraph.value);
+    
+    // 更新数据
     mindMap.value.updateData({
       data: {
         text: page.value?.name,
@@ -135,16 +169,26 @@ watch([mindMap, page, trees, currentGraph], async () => {
       children: nodes,
     });
     
+    // 等待 DOM 更新后再更新颜色
+    if (textColor) {
+      // 使用多个 requestAnimationFrame 确保 DOM 完全更新
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          updateMarkdownColors(textColor);
+        });
+      });
+    }
+    
     uidMap.value = {};
     setTimeout(handleFitCanvas, 500);
   } catch (error) {
     console.error('Failed to load mind map data:', error);
-    // 显示错误信息
   } finally {
-    // 无论成功还是失败，都隐藏加载状态
     setIsLoading(false);
   }
-});
+};
+
+watch([mindMap, page, trees, currentGraph, theme], updateMindMapData);
 
 watch(mindMap, () => {
   if (!mindMap.value) return;

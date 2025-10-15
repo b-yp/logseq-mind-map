@@ -29,6 +29,7 @@ declare namespace IMindMap {
     ];
     associativeLineTargets: string[]; // 如果存在关联线，那么为目标节点的uid列表
     associativeLineText: string; // 关联线文本
+    customNodeContent?: HTMLElement; // 自定义节点内容，用于 Markdown 渲染
     // ...其他样式字段，可以参考主题
   }
 
