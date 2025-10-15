@@ -21,6 +21,7 @@
     "dompurify": "^3.1.7",
     "highlight.js": "^11.10.0",
     "hotkeys-js": "^3.13.7",
+    "marked": "^16.4.0",
     "monaco-editor": "^0.52.0",
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^4.1.2",
