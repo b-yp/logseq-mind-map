@@ -1,3 +1,17 @@
+# [1.10.0](https://github.com/b-yp/logseq-mind-map/compare/v1.9.0...v1.10.0) (2025-10-15)
+
+
+### Bug Fixes
+
+* fixed build failure ([b250442](https://github.com/b-yp/logseq-mind-map/commit/b250442110a8a31cc9085d29cf7f1d3f8e48fd64))
+* fixed build failure 2 ([0edb40f](https://github.com/b-yp/logseq-mind-map/commit/0edb40f8827c3cbbad881adf92437c7631d88011))
+
+
+### Features
+
+* MarkDown nodes support double-click editing ([e685683](https://github.com/b-yp/logseq-mind-map/commit/e685683ef5263c16c0970d545b06e6f473f24518))
+* support markdown rendering ([fae24e7](https://github.com/b-yp/logseq-mind-map/commit/fae24e70c3f316d1c5649db302731797d1e17243))
+
 # [1.9.0](https://github.com/b-yp/logseq-mind-map/compare/v1.8.1...v1.9.0) (2025-06-17)
 
 
