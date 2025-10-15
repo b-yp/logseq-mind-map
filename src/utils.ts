@@ -534,3 +534,5 @@ export const getNodesAtLevel = (tree: IMindMap.Data[], level: number): IMindMap.
   traverse(tree, 1);
   return result;
 };
+// 导出内部函数供其他模块使用
+export { isMarkdown, renderMarkdown, applyMarkdownStyles, processLogseqSyntax };
