@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/b-yp/logseq-mind-map/compare/v1.10.0...v1.10.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* fixed markdown rendering failure & resolve some warning ([325cd6c](https://github.com/b-yp/logseq-mind-map/commit/325cd6c7eff2bcf230222f76e46200322614d981))
+
 # [1.10.0](https://github.com/b-yp/logseq-mind-map/compare/v1.9.0...v1.10.0) (2025-10-15)
 
 
