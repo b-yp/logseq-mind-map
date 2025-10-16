@@ -2,7 +2,7 @@ import "@logseq/libs";
 import { AppGraphInfo, BlockEntity } from "@logseq/libs/dist/LSPlugin.user";
 import hljs from "highlight.js";
 import { marked } from 'marked';
-import * as DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify';
 
 import { useCommonStore } from "@/stores";
 
@@ -61,7 +61,7 @@ const DOMPURIFY_CONFIG = {
     'hr', 'span', 'div'
   ],
   ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'style']
-} as const;
+};
 
 /**
  * 检查文本是否包含 Markdown 语法
@@ -158,7 +158,7 @@ const processTextNodes = (element: HTMLElement, processor: (text: string) => str
   );
 
   const textNodes: Text[] = [];
-  let node;
+  let node: Node | null;
   while (node = walker.nextNode()) {
     textNodes.push(node as Text);
   }
@@ -294,7 +294,7 @@ const renderMarkdown = (text: string): string => {
     const html = marked(text);
 
     // 使用 DOMPurify 清理 HTML，防止 XSS 攻击
-    return (DOMPurify as any).sanitize(html as string, DOMPURIFY_CONFIG);
+    return DOMPurify.sanitize(html as string, DOMPURIFY_CONFIG);
   } catch (error) {
     console.error('Markdown rendering error:', error);
     return `<p style="color: #ff6b6b; font-style: italic;">Markdown 渲染失败: ${error instanceof Error ? error.message : '未知错误'}</p>`;
@@ -365,7 +365,7 @@ const getContent = async (
   }
 
   const imageRegex = /!\[(.*?)\]\((.*?)\)(\{:height (\d+), :width (\d+)\})?/g;
-  let match;
+  let match: RegExpExecArray | null;
   while ((match = imageRegex.exec(data.text!)) !== null) {
     const alt = match[1];
     const url = match[2];
@@ -390,7 +390,7 @@ const getContent = async (
     }
 
     // 设置最终尺寸
-    let finalWidth, finalHeight;
+    let finalWidth: number, finalHeight: number;
 
     if (hasSize) {
       // 如果有设置宽高，使用设置的宽度，并根据比例计算高度
@@ -479,9 +479,9 @@ export const highlightCode = (
   fn: ({ language, code }: { language: string; code: string }) => void
 ) => {
   const codeBlockRegex = /```(.*?)\n([\s\S]*?)```/g;
-  let originLanguage;
-  let code;
-  let match;
+  let originLanguage: string = '';
+  let code: string = '';
+  let match: RegExpExecArray | null;
 
   while ((match = codeBlockRegex.exec(content)) !== null) {
     originLanguage = match[1].trim();

@@ -52,27 +52,27 @@ const useMindMapStore = defineStore(
       mindMap.value?.view.fit(() => {}, false, 20);
     };
     const handleRemoveCurrentNode = async () => {
-      mindMap.value?.execCommand("REMOVE_CURRENT_NODE");
-      const data = activeNode.value.getData();
-      const block = await logseq.Editor.getBlock(data.uid);
-      const childrenUids =
-        block?.children?.map((child) => child[1] as string) || [];
+      try {
+        mindMap.value?.execCommand("REMOVE_CURRENT_NODE");
+        const data = activeNode.value.getData();
+        const block = await logseq.Editor.getBlock(data.uid);
+        const childrenUids =
+          block?.children?.map((child) => child[1] as string) || [];
 
-      for (const uid of childrenUids.reverse()) {
-        await logseq.Editor.moveBlock(uid, data.uid, {
-          before: false,
-          children: false,
-        });
+        for (const uid of childrenUids.reverse()) {
+          await logseq.Editor.moveBlock(uid, data.uid, {
+            before: false,
+            children: false,
+          });
+        }
+
+        await logseq.Editor.removeBlock(data.uid);
+        showToast("删除成功", "success");
+      } catch (error) {
+        showToast("删除失败：" + error, "error");
+      } finally {
+        handleCloseMenu();
       }
-
-      logseq.Editor.removeBlock(data.uid)
-        .then(() => {
-          showToast("删除成功", "success");
-        })
-        .catch((error) => {
-          showToast("删除失败：" + error, "error");
-        })
-        .finally(handleCloseMenu);
     };
     const handleRemoveNode = () => {
       mindMap.value?.execCommand("REMOVE_NODE");

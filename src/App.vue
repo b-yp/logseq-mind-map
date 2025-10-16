@@ -362,23 +362,27 @@ const handleHideTextEdit = async () => {
 };
 
 const handleSave = async (value: string, language: string) => {
-  await logseq.Editor.updateBlock(
-    activeNode.value?.getData()?.uid,
-    `
+  try {
+    await logseq.Editor.updateBlock(
+      activeNode.value?.getData()?.uid,
+      `
 \`\`\`${language}
 ${value}
 \`\`\`
-    `
-  );
+      `
+    );
 
-  const tree = page.value?.uuid
-    ? await logseq.Editor.getPageBlocksTree(page.value.uuid)
-    : [];
+    const tree = page.value?.uuid
+      ? await logseq.Editor.getPageBlocksTree(page.value.uuid)
+      : [];
 
-  setTrees(tree);
+    setTrees(tree);
 
-  codeEditor.value.isOpen = false;
-  showToast("Update Success!", "success");
+    codeEditor.value.isOpen = false;
+    showToast("Update Success!", "success");
+  } catch (error) {
+    showToast((error as Error).message, "error");
+  }
 };
 
 const handleNodeContextmenu = (e, node) => {

@@ -1,6 +1,6 @@
 <template>
   <Drawer
-    :title="$t(`toolBar.${currentDrawer}`)"
+    :title="currentDrawer ? $t(`toolBar.${currentDrawer}`) : ''"
     :isOpen="isDrawerOpen"
     @close="onClose"
   >
