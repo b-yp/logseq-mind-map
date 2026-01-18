@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/b-yp/logseq-mind-map/compare/v1.10.1...v1.10.2) (2026-01-18)
+
+
+### Bug Fixes
+
+* resolve UI freeze and broken shortcuts after node creation ([4a8b7e9](https://github.com/b-yp/logseq-mind-map/commit/4a8b7e961f1b1c196bbf84d00b1a27f240bbd067))
+
 ## [1.10.1](https://github.com/b-yp/logseq-mind-map/compare/v1.10.0...v1.10.1) (2025-10-16)
 
 
