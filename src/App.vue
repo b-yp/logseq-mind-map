@@ -71,7 +71,13 @@ const mainRef = ref<HTMLDivElement>();
 const mouseDownX = ref<number>(0);
 const mouseDownY = ref<number>(0);
 const isMouseDown = ref<boolean>(false);
+
 const uidMap = ref<Record<string, string>>({});
+// Store context for the next created node
+const pendingContext = ref<{
+  type: "children" | "sibling";
+  logseqUid: string;
+} | null>(null);
 
 // 更新所有 markdown 内容的颜色
 const updateMarkdownColors = (textColor: string) => {
@@ -91,6 +97,8 @@ onMounted(() => {
     const mindMapContainer = document.getElementById("mindMapContainer")!;
     const mind = new MindMap({
       el: mindMapContainer,
+      // Disable svg check to prevent shortcuts from dying when focus shifts/overlays appear
+      enableShortcutOnlyWhenMouseInSvg: false,
       isUseCustomNodeContent: true,
       customCreateNodeContent: (node) => {
         const nodeData = node.nodeData.data;
@@ -231,14 +239,42 @@ watch(mindMap, () => {
   mindMap.value.on("svg_mousedown", handleSvgMouseDown);
   mindMap.value.on("mouseup", handleMouseUp);
 
+  mindMap.value.keyCommand.removeShortcut("Tab");
   mindMap.value.keyCommand.addShortcut("Tab", () => {
-    setLastNode(activeNode.value);
-    setSyncNodeType("children");
+    if (!activeNode.value) {
+      showToast("No active node for Tab", "warning");
+      return;
+    }
+    const contextNode = activeNode.value;
+    const contextUid = contextNode.getData().logseqUid || contextNode.getData().uid;
+    
+    // Set pending context for the soon-to-be-created node
+    pendingContext.value = {
+      type: "children",
+      logseqUid: contextUid
+    };
+
+    setSyncNodeType("children"); 
+    mindMap.value.execCommand('INSERT_CHILD_NODE');
   });
 
+  mindMap.value.keyCommand.removeShortcut("Enter");
   mindMap.value.keyCommand.addShortcut("Enter", () => {
-    setLastNode(activeNode.value);
+    if (!activeNode.value) {
+      showToast("No active node for Enter", "warning");
+      return;
+    }
+    const contextNode = activeNode.value;
+    const contextUid = contextNode.getData().logseqUid || contextNode.getData().uid;
+    
+    // Set pending context for the soon-to-be-created node
+    pendingContext.value = {
+      type: "sibling",
+      logseqUid: contextUid
+    };
+    
     setSyncNodeType("sibling");
+    mindMap.value.execCommand('INSERT_NODE');
   });
 
   // TODO: There is a bug in continuous deletion.
@@ -285,30 +321,81 @@ const handleNodeTreeRenderEnd = () => {
 
 const handleNodeActive = (res: any) => {
   res && setActiveNode(res);
+  
+  // Apply pending context if this is a newly created node
+  if (res && pendingContext.value) {
+      // Use direct assignment instead of setData to avoid re-render loop/focus loss
+      // res.setData({ ... }) triggers SET_NODE_DATA command which re-renders node
+      res.nodeData.data.customSyncType = pendingContext.value.type;
+      res.nodeData.data.customContextUid = pendingContext.value.logseqUid;
+      
+      // Clear pending context
+      pendingContext.value = null;
+      
+      // Force valid focus on the node's element if accessible
+      // if (res.group) res.group.focus(); 
+  }
 };
 
 const handleHideTextEdit = async () => {
-  const data = activeNode.value?.getData();
-  const lastNodeData = lastNode.value?.getData();
-  const currentUid =
-    lastNodeData && (uidMap.value[lastNodeData.uid] || lastNodeData.uid);
+  const node = activeNode.value;
+  if (!node) return;
+  const data = node.getData();
+  
+  // Use local node metadata if available, otherwise fall back to global state (legacy/editing)
+  // Check for both 'customSyncType' and '_syncType' just in case, but prefer customSyncType
+  const syncType = data.customSyncType || data._syncType || syncNodeType.value;
+  let currentUid = data.customContextUid || data._contextLogseqUid;
+  
+  // Fallback: If no specific context UID, try current Logseq mapping or default parent logic
+  if (!currentUid) {
+      const lastNodeData = lastNode.value?.getData();
+      currentUid = lastNodeData && (lastNodeData.logseqUid || uidMap.value[lastNodeData.uid] || lastNodeData.uid);
+  }
+  
+  // CRITICAL: Resolve currentUid if it's a temporary internal ID
+  // If we have a mapping for this ID in uidMap, use it!
+  if (currentUid && uidMap.value[currentUid]) {
+      currentUid = uidMap.value[currentUid];
+  }
+
+  // Remove metadata cleanup to prevent unnecessary re-renders that might disrupt focus
+  // Sync type metadata is harmless to keep on the node temporarily
+
+  if (["children", "sibling"].includes(syncType) && !currentUid) {
+    showToast("Error: Target node context not found", "error");
+    // Ensure we reset global state even on error
+    setSyncNodeType("self");
+    return;
+  }
 
   let res: BlockEntity | boolean | null = null;
   try {
-    switch (syncNodeType.value) {
+    switch (syncType) {
       case "self":
-        await logseq.Editor.updateBlock(data.uid, data.text);
+        // For updates, we use the node's own logseqUid if present, or its default uid
+        const targetUid = data.logseqUid || data.uid;
+        console.log('[HideTextEdit] SyncType: self, Updating block:', targetUid, 'with text:', data.text);
+        await logseq.Editor.updateBlock(targetUid, data.text);
         res = true;
         break;
       case "children":
+        console.log('[HideTextEdit] SyncType: children, Appending block to:', currentUid, 'with text:', data.text);
         const childrenRes = await logseq.Editor.appendBlockInPage(
           currentUid,
           data.text
         );
-        uidMap.value[data.uid] = childrenRes?.uuid || "";
+        // Save the real Logseq UUID to the node so future siblings/children can reference it
+        if (childrenRes?.uuid) {
+            uidMap.value[data.uid] = childrenRes.uuid;
+            // Use direct assignment to avoid re-render/focus loss caused by setData()
+            node.nodeData.data.logseqUid = childrenRes.uuid;
+            console.log('[HideTextEdit] Children created. MindMap UID:', data.uid, '-> Logseq UUID:', childrenRes.uuid);
+        }
         res = childrenRes;
         break;
       case "sibling":
+        console.log('[HideTextEdit] SyncType: sibling, Inserting block sibling to:', currentUid, 'with text:', data.text);
         const siblingRes = await logseq.Editor.insertBlock(
           currentUid,
           data.text,
@@ -316,46 +403,32 @@ const handleHideTextEdit = async () => {
             sibling: true,
           }
         );
-        uidMap.value[data.uid] = siblingRes?.uuid || "";
+        if (siblingRes?.uuid) {
+             uidMap.value[data.uid] = siblingRes.uuid;
+             // Use direct assignment to avoid re-render/focus loss caused by setData()
+             node.nodeData.data.logseqUid = siblingRes.uuid;
+             console.log('[HideTextEdit] Sibling created. MindMap UID:', data.uid, '-> Logseq UUID:', siblingRes.uuid);
+        }
         res = siblingRes;
         break;
     }
   } catch (error) {
     res = false;
     showToast((error as Error).message, "error");
+    console.error('[HideTextEdit] Error:', error);
+  } finally {
+    setSyncNodeType("self"); // Ensure global state is reset
+    // CRITICAL: Restore focus to the plugin window/container after async operations
+    // Logseq API calls might steal focus to the main app, so we wait a bit and force it back
+    setTimeout(() => {
+        window.focus();
+        const container = document.getElementById("mindMapContainer");
+        if (container) container.focus();
+    }, 100);
   }
 
   if (res) {
-    showToast(`Update ${syncNodeType.value} Success!`, "success");
-  }
-  
-  // 检查是否需要重新渲染 markdown
-  if (activeNode.value && data) {
-    setTimeout(() => {
-      const updatedText = data.text;
-      if (updatedText && isMarkdown(updatedText)) {
-        // 重新生成 customNodeContent
-        const htmlContent = renderMarkdown(updatedText);
-        const container = document.createElement('div');
-        container.innerHTML = htmlContent;
-        container.className = 'markdown-content';
-        applyMarkdownStyles(container);
-        processLogseqSyntax(container);
-        
-        // 更新颜色
-        const secondTheme = mindMap.value?.getThemeConfig('second');
-        const textColor = secondTheme?.color;
-        if (textColor) {
-          container.style.color = textColor;
-        }
-        
-        data.customNodeContent = container;
-        data.richText = true;
-        
-        // 触发重新渲染
-        activeNode.value.reRender();
-      }
-    }, 100);
+    showToast(`Update ${syncType} Success!`, "success");
   }
   
   setSyncNodeType("self");
@@ -452,7 +525,7 @@ const handleMouseUp = (e) => {
       v-show="isLoading"
       class="loading loading-spinner loading-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50px]"
     ></span>
-    <div id="mindMapContainer"></div>
+    <div id="mindMapContainer" tabindex="0"></div>
     <SettingMenu v-show="!isZenMode" />
     <ToolBar v-show="!isZenMode" />
     <ToolDrawer v-show="!isZenMode" />
