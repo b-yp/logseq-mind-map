@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, shallowRef, markRaw } from "vue";
 import type MindMap from "simple-mind-map";
 import { CONSTANTS } from "@/config/constant";
 import { showToast } from "@/utils";
@@ -11,7 +11,7 @@ const useMindMapStore = defineStore(
     const commonStore = useCommonStore();
     const { handleCloseMenu } = commonStore;
 
-    const mindMap = ref<MindMap | null>(null);
+    const mindMap = shallowRef<MindMap | null>(null);
     const theme = ref("default");
     const layout = ref(CONSTANTS.LAYOUT.LOGICAL_STRUCTURE);
     const data = ref<IMindMap.Data | null>(null);
@@ -19,8 +19,8 @@ const useMindMapStore = defineStore(
       currentIndex: 0,
       total: 0,
     });
-    const activeNode = ref<any>(null);
-    const lastNode = ref<any>(null);
+    const activeNode = shallowRef<any>(null);
+    const lastNode = shallowRef<any>(null);
     const isZenMode = ref<boolean>(false);
     const isLoading = ref<boolean>(false);
     const themeConfig = ref<IMindMap.ThemeConfig>({
@@ -32,14 +32,14 @@ const useMindMapStore = defineStore(
       showLineMarker: false,
     });
 
-    const setMindMap = (mind: MindMap) => (mindMap.value = mind);
+    const setMindMap = (mind: MindMap) => (mindMap.value = markRaw(mind));
     const setTheme = (currentTheme: string) => (theme.value = currentTheme);
     const setLayout = (currentLayout: string) => (layout.value = currentLayout);
     const setData = (currentData: IMindMap.Data) => (data.value = currentData);
     const setSearchInfo = (currentSearchInfo: IMindMap.SearchInfo) =>
       (searchInfo.value = currentSearchInfo);
-    const setActiveNode = (node: any) => (activeNode.value = node);
-    const setLastNode = (node: any) => (lastNode.value = node);
+    const setActiveNode = (node: any) => (activeNode.value = node ? markRaw(node) : null);
+    const setLastNode = (node: any) => (lastNode.value = node ? markRaw(node) : null);
     const setIsZenMode = (isZen: boolean) => (isZenMode.value = isZen);
     const setIsLoading = (isLoad: boolean) => (isLoading.value = isLoad);
     const setThemeConfig = (config: IMindMap.ThemeConfig) =>
@@ -49,7 +49,7 @@ const useMindMapStore = defineStore(
       mindMap.value?.execCommand("UNEXPAND_TO_LEVEL", level);
     };
     const handleFitCanvas = () => {
-      mindMap.value?.view.fit(() => {}, false, 20);
+      mindMap.value?.view.fit(() => { }, false, 20);
     };
     const handleRemoveCurrentNode = async () => {
       try {
