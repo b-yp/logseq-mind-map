@@ -326,18 +326,16 @@ export const getData = async (
   trees: Array<BlockEntity>,
   currentGraph: AppGraphInfo
 ): Promise<IMindMap.Data[]> => {
-  const data: IMindMap.Data[] = [];
-
-  // 使用 Promise.all 处理所有节点
-  await Promise.all(trees
+  // Use Promise.all to map nodes in parallel but preserve order
+  const data = await Promise.all(trees
     .filter((tree) => !!tree.content.trim())
     .map(async (tree) => {
-      data.push({
+      return {
         data: await getContent(tree, currentGraph),
         children: !!tree.children?.length
           ? await getData(tree.children as BlockEntity[], currentGraph)
           : [],
-      });
+      };
     }));
 
   return data.filter((item) => item.data.text);
