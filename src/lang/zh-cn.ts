@@ -110,5 +110,9 @@ export default {
   },
   setting: {
     save: '保存',
+    sensitivity: '灵敏度',
+    zoomSensitivity: '缩放灵敏度',
+    panSensitivity: '平移灵敏度',
+    mousewheelStep: '鼠标滚轮步长',
   },
 };

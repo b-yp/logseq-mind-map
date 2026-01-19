@@ -110,5 +110,9 @@ export default {
   },
   setting: {
     save: "Save",
+    sensitivity: "Sensitivity",
+    zoomSensitivity: "Zoom Sensitivity",
+    panSensitivity: "Pan Sensitivity",
+    mousewheelStep: "Mouse Wheel Step",
   },
 };

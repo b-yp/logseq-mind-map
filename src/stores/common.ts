@@ -18,6 +18,11 @@ const useCommonStore = defineStore(
     const isWeb = ref(false);
     const isShowGuide = ref(false);
 
+    // Sensitivity Settings
+    const scaleRatio = ref(0.1);
+    const translateRatio = ref(0.2);
+    const mousewheelMoveStep = ref(400);
+
     const setIsDrawerOpen = (isOpen: boolean) => (isDrawerOpen.value = isOpen);
     const setIsDarkUI = (isDark: boolean) => {
       isDarkUI.value = isDark;
@@ -37,6 +42,11 @@ const useCommonStore = defineStore(
     const setLang = (value: string) => (lang.value = value);
     const setIsWeb = (value: boolean) => (isWeb.value = value);
     const setIsShowGuide = (value: boolean) => (isShowGuide.value = value);
+
+    const setScaleRatio = (val: number) => (scaleRatio.value = val);
+    const setTranslateRatio = (val: number) => (translateRatio.value = val);
+    const setMousewheelMoveStep = (val: number) =>
+      (mousewheelMoveStep.value = val);
 
     const handleCloseMenu = () => {
       isShowMenu.value = false;
@@ -58,6 +68,9 @@ const useCommonStore = defineStore(
       lang,
       isWeb,
       isShowGuide,
+      scaleRatio,
+      translateRatio,
+      mousewheelMoveStep,
       setIsDrawerOpen,
       setIsDarkUI,
       setCurrentDrawer,
@@ -71,12 +84,21 @@ const useCommonStore = defineStore(
       setLang,
       setIsWeb,
       setIsShowGuide,
+      setScaleRatio,
+      setTranslateRatio,
+      setMousewheelMoveStep,
       handleCloseMenu,
     };
   },
   {
     persist: {
-      pick: ["isDarkUI", "lang"],
+      pick: [
+        "isDarkUI",
+        "lang",
+        "scaleRatio",
+        "translateRatio",
+        "mousewheelMoveStep",
+      ],
     },
   }
 );
