@@ -1,6 +1,6 @@
 {
   "name": "logseq-mind-map",
-  "version": "1.10.2",
+  "version": "1.11.0",
   "main": "dist/index.html",
   "logseq": {
     "id": "logseq-mind-map",

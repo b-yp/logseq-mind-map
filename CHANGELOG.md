@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/b-yp/logseq-mind-map/compare/v1.10.2...v1.11.0) (2026-01-19)
+
+
+### Features
+
+* add configurable sensitivity settings for zoom and pan ([ce47f2c](https://github.com/b-yp/logseq-mind-map/commit/ce47f2c3f60fb9db08a00d8417f15440da8a2d75))
+
 ## [1.10.2](https://github.com/b-yp/logseq-mind-map/compare/v1.10.1...v1.10.2) (2026-01-18)
 
 
