@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/b-yp/logseq-mind-map/compare/v1.11.1...v1.12.0) (2026-01-19)
+
+
+### Bug Fixes
+
+* fix drawer ghost area ([63e08bd](https://github.com/b-yp/logseq-mind-map/commit/63e08bd6731a93416b4a99511008450e3590be1b))
+
+
+### Features
+
+* add close button ([30fa7bc](https://github.com/b-yp/logseq-mind-map/commit/30fa7bc777dafb1f95ccd7a1b46a2e2dd67fa019))
+
 ## [1.11.1](https://github.com/b-yp/logseq-mind-map/compare/v1.11.0...v1.11.1) (2026-01-19)
 
 
