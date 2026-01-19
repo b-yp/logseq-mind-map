@@ -94,7 +94,6 @@ const toolBarData = [
     key: "setting",
     icon: "setting",
     title: "toolBar.setting",
-    hidden: !isWeb.value,
     onclick: () => {
       setIsDrawerOpen(true);
       setCurrentDrawer("setting");

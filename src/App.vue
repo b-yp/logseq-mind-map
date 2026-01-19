@@ -56,7 +56,7 @@ const { page, trees, currentGraph, logseqHost, logseqToken } =
   storeToRefs(logseqStore);
 const { mindMap, activeNode, lastNode, isZenMode, isLoading, themeConfig, theme, layout } =
   storeToRefs(mindMapStore);
-const { isDarkUI, syncNodeType, lang, isWeb } = storeToRefs(commonStore);
+const { isDarkUI, syncNodeType, lang, isWeb, scaleRatio, translateRatio, mousewheelMoveStep } = storeToRefs(commonStore);
 
 const codeEditor = ref<{
   isOpen: boolean;
@@ -141,9 +141,19 @@ onMounted(() => {
           codeEditor.value.content = code;
         });
       },
+      scaleRatio: scaleRatio.value,
+      translateRatio: translateRatio.value,
+      mousewheelMoveStep: mousewheelMoveStep.value,
     } as any);
     setMindMap(mind);
   }, 100);
+
+  watch([scaleRatio, translateRatio, mousewheelMoveStep], () => {
+    if (!mindMap.value) return;
+    mindMap.value.opt.scaleRatio = scaleRatio.value;
+    mindMap.value.opt.translateRatio = translateRatio.value;
+    mindMap.value.opt.mousewheelMoveStep = mousewheelMoveStep.value;
+  });
 
   hotkeys("esc", close);
 });
