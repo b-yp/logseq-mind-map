@@ -536,7 +536,7 @@ const handleMouseUp = (e) => {
       class="loading loading-spinner loading-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50px]"
     ></span>
     <div id="mindMapContainer" tabindex="0"></div>
-    <SettingMenu v-show="!isZenMode" />
+    <SettingMenu v-show="!isZenMode" @close="close" />
     <ToolBar v-show="!isZenMode" />
     <ToolDrawer v-show="!isZenMode" />
     <CodeEditor

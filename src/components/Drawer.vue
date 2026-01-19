@@ -1,7 +1,7 @@
 <template>
   <div
     class="drawer drawer-end fixed top-1/2 right-0 h-[80vh] -translate-y-1/2"
-    :class="{ 'drawer-open': isOpen }"
+    :class="{ 'drawer-open': isOpen, 'pointer-events-none': !isOpen }"
     :style="{ width: isOpen ? '20vw' : '0' }"
   >
     <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
