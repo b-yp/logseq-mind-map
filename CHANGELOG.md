@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/b-yp/logseq-mind-map/compare/v1.11.0...v1.11.1) (2026-01-19)
+
+
+### Bug Fixes
+
+* resolve race condition in node data loading to preserve order ([6da0fb7](https://github.com/b-yp/logseq-mind-map/commit/6da0fb7042a3244169ba8aae843e4126627bc3db))
+
 # [1.11.0](https://github.com/b-yp/logseq-mind-map/compare/v1.10.2...v1.11.0) (2026-01-19)
 
 
