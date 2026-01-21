@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/b-yp/logseq-mind-map/compare/v1.12.0...v1.13.0) (2026-01-21)
+
+
+### Features
+
+* add interactive search result list and optimize UI layout ([fa0aa1c](https://github.com/b-yp/logseq-mind-map/commit/fa0aa1cff14adf735c222c634a5aa502b987babd))
+
 # [1.12.0](https://github.com/b-yp/logseq-mind-map/compare/v1.11.1...v1.12.0) (2026-01-19)
 
 
