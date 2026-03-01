@@ -204,9 +204,14 @@ const updateMindMapData = async () => {
     const nodes = await getData(trees.value, currentGraph.value);
     
     // 更新数据
+    let rootText = page.value?.name;
+    if (!rootText && (page.value as any)?.content) {
+      rootText = (page.value as any).content.split('\n')[0] || "Block Root";
+    }
+
     mindMap.value.updateData({
       data: {
-        text: page.value?.name,
+        text: rootText,
         uid: page.value?.uuid || page.value?.id,
       },
       children: nodes,
