@@ -207,7 +207,7 @@ const updateMindMapData = async () => {
     mindMap.value.updateData({
       data: {
         text: page.value?.name,
-        uid: page.value?.id,
+        uid: page.value?.uuid || page.value?.id,
       },
       children: nodes,
     });
