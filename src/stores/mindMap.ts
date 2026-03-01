@@ -67,7 +67,6 @@ const useMindMapStore = defineStore(
         }
 
         await logseq.Editor.removeBlock(data.uid);
-        showToast("删除成功", "success");
       } catch (error) {
         showToast("删除失败：" + error, "error");
       } finally {
@@ -78,9 +77,6 @@ const useMindMapStore = defineStore(
       mindMap.value?.execCommand("REMOVE_NODE");
       const data = activeNode.value.getData();
       logseq.Editor.removeBlock(data.uid)
-        .then(() => {
-          showToast("删除成功", "success");
-        })
         .catch((error) => {
           showToast("删除失败：" + error, "error");
         })

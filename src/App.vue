@@ -437,10 +437,6 @@ const handleHideTextEdit = async () => {
     }, 100);
   }
 
-  if (res) {
-    showToast(`Update ${syncType} Success!`, "success");
-  }
-  
   setSyncNodeType("self");
 };
 
@@ -462,7 +458,6 @@ ${value}
     setTrees(tree);
 
     codeEditor.value.isOpen = false;
-    showToast("Update Success!", "success");
   } catch (error) {
     showToast((error as Error).message, "error");
   }
