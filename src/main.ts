@@ -88,14 +88,14 @@ if (import.meta.env.VITE_MODE === "web") {
   });
   setLogseqHost(host);
   setLogseqToken(token);
-  renderApp();
+  renderApp(true);
 } else {
   console.log("=== logseq-mind-map loaded ===");
   setIsWeb(false);
   logseq.ready(() => {
     logseq.provideModel({
       show() {
-        renderApp();
+        renderApp(true);
         logseq.showMainUI();
       },
     });
@@ -116,11 +116,33 @@ if (import.meta.env.VITE_MODE === "web") {
         </a>
       `,
     });
+
+    logseq.Editor.registerBlockContextMenuItem("Open as Mind Map", async ({ uuid }) => {
+      try {
+        const block = await logseq.Editor.getBlock(uuid, { includeChildren: true });
+        if (!block) return;
+
+        const currentGraph = await logseq.App.getCurrentGraph();
+        setPage(block);
+        setTrees((block.children as any[]) || []);
+        setCurrentGraph(currentGraph);
+        setIsFetchFailed(false);
+        setIsShowGuide(false);
+
+        renderApp(false);
+        logseq.showMainUI();
+      } catch (error) {
+        console.error("Open block mind map error:", error);
+        showToast("Failed to open block mind map", "error");
+      }
+    });
   });
 }
 
-function renderApp() {
-  setData();
+function renderApp(fetchPage = true) {
+  if (fetchPage) {
+    setData();
+  }
   if (isMounted) return;
   app.mount("#root");
   isMounted = true;

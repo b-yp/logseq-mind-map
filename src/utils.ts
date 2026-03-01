@@ -328,7 +328,6 @@ export const getData = async (
 ): Promise<IMindMap.Data[]> => {
   // Use Promise.all to map nodes in parallel but preserve order
   const data = await Promise.all(trees
-    .filter((tree) => !!tree.content.trim())
     .map(async (tree) => {
       return {
         data: await getContent(tree, currentGraph),
@@ -338,7 +337,7 @@ export const getData = async (
       };
     }));
 
-  return data.filter((item) => item.data.text);
+  return data;
 };
 
 const getContent = async (

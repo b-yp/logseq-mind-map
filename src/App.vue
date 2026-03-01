@@ -204,10 +204,15 @@ const updateMindMapData = async () => {
     const nodes = await getData(trees.value, currentGraph.value);
     
     // 更新数据
+    let rootText = page.value?.name;
+    if (!rootText && (page.value as any)?.content) {
+      rootText = (page.value as any).content.split('\n')[0] || "Block Root";
+    }
+
     mindMap.value.updateData({
       data: {
-        text: page.value?.name,
-        uid: page.value?.id,
+        text: rootText,
+        uid: page.value?.uuid || page.value?.id,
       },
       children: nodes,
     });
@@ -437,10 +442,6 @@ const handleHideTextEdit = async () => {
     }, 100);
   }
 
-  if (res) {
-    showToast(`Update ${syncType} Success!`, "success");
-  }
-  
   setSyncNodeType("self");
 };
 
@@ -462,7 +463,6 @@ ${value}
     setTrees(tree);
 
     codeEditor.value.isOpen = false;
-    showToast("Update Success!", "success");
   } catch (error) {
     showToast((error as Error).message, "error");
   }
