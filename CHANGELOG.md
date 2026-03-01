@@ -1,3 +1,16 @@
+# [1.14.0](https://github.com/b-yp/logseq-mind-map/compare/v1.13.0...v1.14.0) (2026-03-01)
+
+
+### Bug Fixes
+
+* remove success toast notifications for editing and deleting nodes ([2c603b9](https://github.com/b-yp/logseq-mind-map/commit/2c603b99341be692a9c967683f5963d364976bac)), closes [#49](https://github.com/b-yp/logseq-mind-map/issues/49)
+* resolve node creation error and missing empty blocks ([#22](https://github.com/b-yp/logseq-mind-map/issues/22)) ([64406f7](https://github.com/b-yp/logseq-mind-map/commit/64406f7ff0cf5f0be540ce06f8cdbd97ec5f5b20))
+
+
+### Features
+
+* add support for opening mind map from block context menu ([0545b9d](https://github.com/b-yp/logseq-mind-map/commit/0545b9dc14777e3d24d0ee9a4a2b9f91ca836037))
+
 # [1.13.0](https://github.com/b-yp/logseq-mind-map/compare/v1.12.0...v1.13.0) (2026-01-21)
 
 
