@@ -243,7 +243,7 @@ watch(mindMap, () => {
   mindMap.value.on("node_tree_render_end", handleNodeTreeRenderEnd);
   mindMap.value.on("node_active", handleNodeActive);
   mindMap.value.on("hide_text_edit", handleHideTextEdit);
-  mindMap.value.on("data_change", setData);
+  mindMap.value.on("data_change", () => setTimeout(setData, 100));
   mindMap.value.on("search_info_change", setSearchInfo);
   mindMap.value.on("node_contextmenu", handleNodeContextmenu);
   mindMap.value.on("node_click", handleCloseMenu);
