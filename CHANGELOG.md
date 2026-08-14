@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/b-yp/logseq-mind-map/compare/v1.14.0...v1.14.1) (2026-08-14)
+
+
+### Bug Fixes
+
+* trigger release for markdown cut and paste synchronization ([e51d99e](https://github.com/b-yp/logseq-mind-map/commit/e51d99e4f5cc97c28085212ba0a877d6d426f515))
+
 # [1.14.0](https://github.com/b-yp/logseq-mind-map/compare/v1.13.0...v1.14.0) (2026-03-01)
 
 
