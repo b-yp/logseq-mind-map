@@ -51,13 +51,21 @@ const useMindMapStore = defineStore(
     const handleFitCanvas = () => {
       mindMap.value?.view.fit(() => { }, false, 20);
     };
+    const extractChildUid = (child: any): string | null => {
+      if (!child) return null;
+      if (Array.isArray(child)) return (child[1] ?? child[0]) as string;
+      if (typeof child === "object") return (child.uuid ?? child.id) as string;
+      if (typeof child === "string") return child;
+      return null;
+    };
+
     const handleRemoveCurrentNode = async () => {
       try {
         mindMap.value?.execCommand("REMOVE_CURRENT_NODE");
         const data = activeNode.value.getData();
         const block = await logseq.Editor.getBlock(data.uid);
         const childrenUids =
-          block?.children?.map((child) => child[1] as string) || [];
+          (block?.children?.map(extractChildUid).filter(Boolean) as string[]) || [];
 
         for (const uid of childrenUids.reverse()) {
           await logseq.Editor.moveBlock(uid, data.uid, {
