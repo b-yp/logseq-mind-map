@@ -344,22 +344,32 @@ const getContent = async (
   block: BlockEntity,
   currentGraph: AppGraphInfo
 ): Promise<Partial<IMindMap.PureData>> => {
+  const rawContent = block.content || "";
   const data: Partial<IMindMap.PureData> = {
-    text: block.content.trim(),
+    text: rawContent.trim(),
     uid: block.uuid,
   };
-  if (block.propertiesTextValues) {
-    const propertiesKeys = Object.keys(block.propertiesTextValues);
-    const contentArray = data.text!.split("\n");
-    const pureContentArray = contentArray.filter((item) => {
-      return !propertiesKeys.some((key) => {
-        const kebabKey = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-        const trimmedItem = item.trim();
-        return trimmedItem.startsWith(`${kebabKey}::`);
-      });
+
+  const propertyPattern = /^\s*[\w\-_]+::\s*.*$/;
+  const contentArray = (data.text || "").split("\n");
+  const propertiesKeys = [
+    ...(block.propertiesTextValues ? Object.keys(block.propertiesTextValues) : []),
+    ...(block.properties ? Object.keys(block.properties) : [])
+  ];
+
+  const pureContentArray = contentArray.filter((item) => {
+    const trimmedItem = item.trim();
+    if (!trimmedItem) return false;
+    const matchesKey = propertiesKeys.some((key) => {
+      const kebabKey = key.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      return trimmedItem.startsWith(`${kebabKey}::`);
     });
-    data.text = pureContentArray.join("\n");
-  }
+    if (matchesKey) return false;
+    if (propertyPattern.test(trimmedItem)) return false;
+    return true;
+  });
+
+  data.text = pureContentArray.length > 0 ? pureContentArray.join("\n") : (data.text || "");
 
   const imageRegex = /!\[(.*?)\]\((.*?)\)(\{:height (\d+), :width (\d+)\})?/g;
   let match: RegExpExecArray | null;
@@ -368,9 +378,14 @@ const getContent = async (
     const url = match[2];
     const hasSize = !!match[3];
 
-    // 判断是否为在线图片URL
-    const isOnlineImage = url.startsWith('http://') || url.startsWith('https://');
-    const imageUrl = isOnlineImage ? url : currentGraph?.path + url.slice(2);
+    // 判断是否为在线图片URL或绝对协议
+    const isOnlineImage = /^(https?:\/\/|data:|file:\/\/)/i.test(url);
+    let imageUrl = url;
+    if (!isOnlineImage) {
+      const cleanUrl = url.replace(/^(\.\.[\/\\]|\.[\/\\]|[\/\\])+/, "");
+      const graphPath = currentGraph?.path ? currentGraph.path.replace(/[\/\\]+$/, "") : "";
+      imageUrl = graphPath ? `${graphPath}/${cleanUrl}` : cleanUrl;
+    }
 
     // 获取图片实际尺寸
     let actualWidth = 100;

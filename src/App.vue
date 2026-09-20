@@ -204,9 +204,11 @@ const updateMindMapData = async () => {
     const nodes = await getData(trees.value, currentGraph.value);
     
     // 更新数据
-    let rootText = page.value?.name;
+    let rootText = (page.value as any)?.originalName || page.value?.name;
     if (!rootText && (page.value as any)?.content) {
-      rootText = (page.value as any).content.split('\n')[0] || "Block Root";
+      const contentLines = ((page.value as any).content || "").split('\n');
+      const firstValidLine = contentLines.find((line: string) => line.trim() && !/^\s*[\w\-_]+::/.test(line.trim()));
+      rootText = firstValidLine?.trim() || "Block Root";
     }
 
     mindMap.value.updateData({
@@ -456,9 +458,9 @@ ${value}
       `
     );
 
-    const tree = page.value?.uuid
+    const tree = (page.value?.uuid
       ? await logseq.Editor.getPageBlocksTree(page.value.uuid)
-      : [];
+      : []) || [];
 
     setTrees(tree);
 

@@ -151,9 +151,9 @@ function renderApp(fetchPage = true) {
 export async function setData() {
   try {
     const page = await logseq.Editor.getCurrentPage();
-    const tree = page?.uuid
+    const tree = (page?.uuid
       ? await logseq.Editor.getPageBlocksTree(page.uuid)
-      : [];
+      : []) || [];
     const currentGraph = await logseq.App.getCurrentGraph();
     setPage(page);
     setTrees(tree);
