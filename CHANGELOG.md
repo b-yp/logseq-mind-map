@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/b-yp/logseq-mind-map/compare/v1.14.1...v1.14.2) (2026-09-20)
+
+
+### Bug Fixes
+
+* support Logseq DB mode, upgrade @logseq/libs to 0.3.x and update CI workflows ([5c841f8](https://github.com/b-yp/logseq-mind-map/commit/5c841f8209c60628bd6a321777c905b0bb7587ba))
+
 ## [1.14.1](https://github.com/b-yp/logseq-mind-map/compare/v1.14.0...v1.14.1) (2026-08-14)
 
 
