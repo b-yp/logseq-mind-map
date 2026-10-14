@@ -344,7 +344,8 @@ const getContent = async (
   block: BlockEntity,
   currentGraph: AppGraphInfo
 ): Promise<Partial<IMindMap.PureData>> => {
-  const rawContent = block.content || "";
+  // DB 图谱中 block 文本位于 title 字段（content 可能不存在），文件图谱沿用 content
+  const rawContent = block.title || block.content || "";
   const data: Partial<IMindMap.PureData> = {
     text: rawContent.trim(),
     uid: block.uuid,
