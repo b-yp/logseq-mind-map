@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/b-yp/logseq-mind-map/compare/v1.14.2...v1.15.0) (2026-10-14)
+
+
+### Features
+
+* support Logseq DB graphs ([7f9d4ba](https://github.com/b-yp/logseq-mind-map/commit/7f9d4bac72c56ea40a642b58c47fb529996f289d))
+
 ## [1.14.2](https://github.com/b-yp/logseq-mind-map/compare/v1.14.1...v1.14.2) (2026-09-20)
 
 
