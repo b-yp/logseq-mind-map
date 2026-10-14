@@ -344,7 +344,8 @@ const getContent = async (
   block: BlockEntity,
   currentGraph: AppGraphInfo
 ): Promise<Partial<IMindMap.PureData>> => {
-  const rawContent = block.content || "";
+  // DB graphs store block text in `title` (`content` was removed); file graphs still use `content`
+  const rawContent = block.title || block.content || "";
   const data: Partial<IMindMap.PureData> = {
     text: rawContent.trim(),
     uid: block.uuid,
