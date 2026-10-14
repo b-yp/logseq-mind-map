@@ -204,7 +204,7 @@ const updateMindMapData = async () => {
     const nodes = await getData(trees.value, currentGraph.value);
     
     // 更新数据
-    let rootText = (page.value as any)?.originalName || page.value?.name;
+    let rootText = (page.value as any)?.title || (page.value as any)?.originalName || page.value?.name;
     if (!rootText && (page.value as any)?.content) {
       const contentLines = ((page.value as any).content || "").split('\n');
       const firstValidLine = contentLines.find((line: string) => line.trim() && !/^\s*[\w\-_]+::/.test(line.trim()));
